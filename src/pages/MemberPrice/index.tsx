@@ -5,6 +5,7 @@ import {
   Space,
   Button,
   Input,
+  Card
 } from 'antd';
 import {
   postMembershipCards
@@ -42,38 +43,39 @@ const AccessPage: React.FC = () => {
         title: '会员类型',
       }}
     >
-      <div style={{width: '700px'}}>
-        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-          <p style={{marginBottom: 0}}>月卡</p>
-          <Flex justify={'flex-start'} align={'center'}>
-            设置月卡价格：
-            &nbsp;&nbsp;&nbsp;
-            <Input prefix="￥" suffix="元" style={{width: '400px'}}/>
-            &nbsp;&nbsp;&nbsp;
-            <Button type='primary'>保存设置</Button>
-          </Flex>
-          <p style={{marginBottom: 0}}>季卡</p>
-          <Flex justify={'flex-start'} align={'center'}>
-            设置季卡价格：
-            &nbsp;&nbsp;&nbsp;
-            <Input prefix="￥" suffix="元" style={{width: '400px'}}/>
-            &nbsp;&nbsp;&nbsp;
-            <Button type='primary'>保存设置</Button>
-          </Flex>
-          <p style={{marginBottom: 0}}>年卡</p>
-          <Flex justify={'flex-start'} align={'center'}>
-            设置年卡价格：
-            &nbsp;&nbsp;&nbsp;
-            <Input prefix="￥" suffix="元" style={{width: '400px'}}/>
-            &nbsp;&nbsp;&nbsp;
-            <Button type='primary'>保存设置</Button>
-          </Flex>
-          <Flex justify={'center'} align={'center'}>
-            <Button type='primary'>确认价格</Button>
-          </Flex>
-        </Space>
-      </div>
-
+      <Card>
+        <div style={{width: '700px'}}>
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+            <p style={{marginBottom: 0}}>月卡</p>
+            <Flex justify={'flex-start'} align={'center'}>
+              设置月卡价格：
+              &nbsp;&nbsp;&nbsp;
+              <Input prefix="￥" suffix="元" style={{width: '400px'}}/>
+              &nbsp;&nbsp;&nbsp;
+              <Button type='primary'>保存设置</Button>
+            </Flex>
+            <p style={{marginBottom: 0}}>季卡</p>
+            <Flex justify={'flex-start'} align={'center'}>
+              设置季卡价格：
+              &nbsp;&nbsp;&nbsp;
+              <Input prefix="￥" suffix="元" style={{width: '400px'}}/>
+              &nbsp;&nbsp;&nbsp;
+              <Button type='primary'>保存设置</Button>
+            </Flex>
+            <p style={{marginBottom: 0}}>年卡</p>
+            <Flex justify={'flex-start'} align={'center'}>
+              设置年卡价格：
+              &nbsp;&nbsp;&nbsp;
+              <Input prefix="￥" suffix="元" style={{width: '400px'}}/>
+              &nbsp;&nbsp;&nbsp;
+              <Button type='primary'>保存设置</Button>
+            </Flex>
+            <Flex justify={'center'} align={'center'}>
+              <Button type='primary'>确认价格</Button>
+            </Flex>
+          </Space>
+        </div>
+      </Card>
     </PageContainer>
   );
 };

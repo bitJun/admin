@@ -4,51 +4,35 @@ import {
   Button,
   Flex,
   Input,
-  Table
+  Table,
+  Card
 } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
 import {
-  queryCadrList
+  queryFinanceList
 } from '@/services/api';
 
 const { Search } = Input;
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
 
-const columns: TableColumnsType<DataType> = [
+const columns: TableColumnsType= [
   { title: '序号', dataIndex: 'index' },
-  { title: '用户ID', dataIndex: 'userId' },
-  { title: '充值时间', dataIndex: 'createdTime' },
-  { title: '充值金额(元)', dataIndex: 'address' },
-  { title: '有效期', dataIndex: 'address' },
+  { title: '用户ID', dataIndex: 'userId', render: (text, record, index) => record.order.buyerId },
+  { title: '充值时间', dataIndex: 'createdTime', render: (text, record, index) => record.order.createTime },
+  { title: '充值金额(元)', dataIndex: 'address', render: (text, record, index) => <span>{record.order.amount}元</span> },
+  { title: '有效期', dataIndex: 'address', render: (text, record, index) => record.order.durationTime },
   { title: '充值类型', dataIndex: 'address' },
 ];
 
-const dataSource = Array.from<DataType>({ length: 46 }).map<DataType>((_, i) => ({
-  key: i,
-  name: `Edward King ${i}`,
-  age: 32,
-  address: `London, Park Lane no. ${i}`,
-}));
-
-
 const FinancePage = () => {
-
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
-
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [userId, setUserId] = useState<number>();
-
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -60,25 +44,25 @@ const FinancePage = () => {
 
   const onLoadData = () => {
     let params = {
-      pageIndex,
-      pageSize,
-      userId
+      page_id: pageIndex,
+      page_size: pageSize,
+      user_name: ''
     }
-    queryCadrList(params)
+    queryFinanceList(params)
       .then((res)=>{
         console.log('res', res);
         let {
-          data
+          orders
         } = res;
-        data = data.map((item:any, index:number)=>{
+        orders = orders.map((item:any, index:number)=>{
           item.index = index;
           return item;
         })
-        setList(data);
+        setList(orders);
       })
   }
 
-  const rowSelection: TableRowSelection<DataType> = {
+  const rowSelection: TableRowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
@@ -96,36 +80,38 @@ const FinancePage = () => {
         title: '财务管理',
       }}
     >
-      <Flex justify={'space-between'} align={'center'}>
-        {/* <Button type="primary">Primary</Button> */}
-        <Search
-          placeholder="搜索用户ID"
-          onSearch={onSearch}
-          style={{
-            width: 300,
+      <Card>
+        <Flex justify={'space-between'} align={'center'}>
+          {/* <Button type="primary">Primary</Button> */}
+          <Search
+            placeholder="搜索用户ID"
+            onSearch={onSearch}
+            style={{
+              width: 300,
+            }}
+            enterButton="搜索"
+          />
+          {/* <Button type="primary">导出Excel</Button> */}
+        </Flex>
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={list}
+          pagination={{
+            total: 85,
+            defaultCurrent: 1,
+            defaultPageSize: 10,
+            showSizeChanger: true,
+            showTotal: total => `Total ${total} Items`,
+            onChange: (page, pageSize) => {
+              console.log(page, pageSize);
+            },
+            onShowSizeChange: (current, size) => {
+              console.log(current, size);
+            }
           }}
-          enterButton="搜索"
         />
-        <Button type="primary">导出Excel</Button>
-      </Flex>
-      <Table<DataType>
-        rowSelection={rowSelection}
-        columns={columns}
-        dataSource={dataSource}
-        pagination={{
-          total: 85,
-          defaultCurrent: 1,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          showTotal: total => `Total ${total} Items`,
-          onChange: (page, pageSize) => {
-            console.log(page, pageSize);
-          },
-          onShowSizeChange: (current, size) => {
-            console.log(current, size);
-          }
-        }}
-      />
+      </Card>
     </PageContainer>
   );
 };

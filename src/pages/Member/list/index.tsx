@@ -7,7 +7,8 @@ import {
   Table,
   Select,
   Space,
-  DatePicker
+  DatePicker,
+  Card
 } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
 
@@ -87,108 +88,110 @@ const MemberList = () => {
         title: '用户管理',
       }}
     >
-      <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <Flex justify={'space-between'} align={'center'}>
-          {/* <Button type="primary">Primary</Button> */}
-          <Search
-            placeholder="来源标识/学生/家长/老师/手机号/卡号"
-            onSearch={onSearch}
-            style={{
-              width: 400,
-            }}
-            enterButton="搜索"
-          />
-          <Flex justify={'flex-start'} align={'center'} gap={10}>
-            <Button type="primary">创建用户</Button>
-            <Button type="primary">导出Excel</Button>
+      <Card>
+        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+          <Flex justify={'space-between'} align={'center'}>
+            {/* <Button type="primary">Primary</Button> */}
+            <Search
+              placeholder="来源标识/学生/家长/老师/手机号/卡号"
+              onSearch={onSearch}
+              style={{
+                width: 400,
+              }}
+              enterButton="搜索"
+            />
+            <Flex justify={'flex-start'} align={'center'} gap={10}>
+              <Button type="primary">创建用户</Button>
+              <Button type="primary">导出Excel</Button>
+            </Flex>
           </Flex>
-        </Flex>
-        <Flex justify={'flex-start'} align={'center'} gap={10}>
-          <Select
-            defaultValue="lucy"
-            style={{ width: 120 }}
-            onChange={handleChange}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}
+          <Flex justify={'flex-start'} align={'center'} gap={10}>
+            <Select
+              defaultValue="lucy"
+              style={{ width: 120 }}
+              onChange={handleChange}
+              options={[
+                { value: 'jack', label: 'Jack' },
+                { value: 'lucy', label: 'Lucy' },
+                { value: 'Yiminghe', label: 'yiminghe' },
+                { value: 'disabled', label: 'Disabled', disabled: true },
+              ]}
+            />
+            <Select
+              defaultValue="lucy"
+              style={{ width: 120 }}
+              onChange={handleChange}
+              options={[
+                { value: 'jack', label: 'Jack' },
+                { value: 'lucy', label: 'Lucy' },
+                { value: 'Yiminghe', label: 'yiminghe' },
+                { value: 'disabled', label: 'Disabled', disabled: true },
+              ]}
+            />
+            <Select
+              defaultValue="lucy"
+              style={{ width: 120 }}
+              onChange={handleChange}
+              options={[
+                { value: 'jack', label: 'Jack' },
+                { value: 'lucy', label: 'Lucy' },
+                { value: 'Yiminghe', label: 'yiminghe' },
+                { value: 'disabled', label: 'Disabled', disabled: true },
+              ]}
+            />
+            <Select
+              defaultValue="lucy"
+              style={{ width: 120 }}
+              onChange={handleChange}
+              options={[
+                { value: 'jack', label: 'Jack' },
+                { value: 'lucy', label: 'Lucy' },
+                { value: 'Yiminghe', label: 'yiminghe' },
+                { value: 'disabled', label: 'Disabled', disabled: true },
+              ]}
+            />
+            <Select
+              defaultValue="lucy"
+              style={{ width: 120 }}
+              onChange={handleChange}
+              options={[
+                { value: 'jack', label: 'Jack' },
+                { value: 'lucy', label: 'Lucy' },
+                { value: 'Yiminghe', label: 'yiminghe' },
+                { value: 'disabled', label: 'Disabled', disabled: true },
+              ]}
+            />
+            <RangePicker />
+            成绩:
+            <Input style={{ width: 120 }} />
+            -
+            <Input style={{ width: 120 }} />
+            <Button
+              type="primary"
+            >
+              筛选
+            </Button>
+          </Flex>
+          <Table<DataType>
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={dataSource}
+            pagination={{
+              total: 85,
+              defaultCurrent: 1,
+              defaultPageSize: 10,
+              showSizeChanger: true,
+              showTotal: total => `Total ${total} Items`,
+              onChange: (page, pageSize) => {
+                console.log(page, pageSize);
+              },
+              onShowSizeChange: (current, size) => {
+                console.log(current, size);
+              }
+            }}
           />
-          <Select
-            defaultValue="lucy"
-            style={{ width: 120 }}
-            onChange={handleChange}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}
-          />
-          <Select
-            defaultValue="lucy"
-            style={{ width: 120 }}
-            onChange={handleChange}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}
-          />
-          <Select
-            defaultValue="lucy"
-            style={{ width: 120 }}
-            onChange={handleChange}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}
-          />
-          <Select
-            defaultValue="lucy"
-            style={{ width: 120 }}
-            onChange={handleChange}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}
-          />
-          <RangePicker />
-          成绩:
-          <Input style={{ width: 120 }} />
-          -
-          <Input style={{ width: 120 }} />
-          <Button
-            type="primary"
-          >
-            筛选
-          </Button>
-        </Flex>
-        <Table<DataType>
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={dataSource}
-          pagination={{
-            total: 85,
-            defaultCurrent: 1,
-            defaultPageSize: 10,
-            showSizeChanger: true,
-            showTotal: total => `Total ${total} Items`,
-            onChange: (page, pageSize) => {
-              console.log(page, pageSize);
-            },
-            onShowSizeChange: (current, size) => {
-              console.log(current, size);
-            }
-          }}
-        />
-      </Space>
+        </Space>
+      </Card>
     </PageContainer>
   );
 };

@@ -143,7 +143,7 @@ const HomePage: React.FC = () => {
   return (
     <PageContainer ghost>
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <Card>
+        {/* <Card>
           <Row gutter={16}>
             <Col className="gutter-row" span={6}>
               <Flex align='center' gap={'16px'}>
@@ -212,18 +212,16 @@ const HomePage: React.FC = () => {
               </Flex>
             </Col>
           </Row>
-        </Card>
-        <Card>
-          <Row gutter={16}>
-            <Col className="gutter-row" span={12}>
+        </Card> */}
+        
+        <Row gutter={16}>
+          <Col className="gutter-row" span={12}>
+            <Card>
               <Flex
                 align='center'
                 gap={'12px'}
               >
-                {/* <label className={styles.label}>运营</label> */}
-                <label className={styles.label}>财务</label>
-                {/* <label className={styles.label}>业务</label> */}
-                {/* <label className={styles.label}>工单</label> */}
+                <label className={styles.label}>运营</label>
               </Flex>
               <h4 className={styles.title}>访问量</h4>
               <Flex
@@ -274,10 +272,6 @@ const HomePage: React.FC = () => {
                   </Button>
                 </Flex>
               </Flex>
-              {/* <ChartLine 
-                id={'visit-chart'}
-                data={statesInfo?.list || []}
-              /> */}
               <ChartLine 
                 id={'visit-chart'}
                 data={[
@@ -298,16 +292,16 @@ const HomePage: React.FC = () => {
                   },
                 ]}
               />
-            </Col>
-            <Col className="gutter-row" span={12}>
+            </Card>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Card>
               <Flex
                 align='center'
                 gap={'12px'}
               >
                 <label className={styles.label}>注册用户</label>
-                {/* <label className={styles.label}>运营</label> */}
-                {/* <label className={styles.label}>业务</label> */}
-                {/* <label className={styles.label}>工单</label> */}
+                <label className={styles.label}>VIP用户</label>
               </Flex>
               <h4 className={styles.title}>注册量</h4>
               <Flex
@@ -362,83 +356,85 @@ const HomePage: React.FC = () => {
                 id={'rigister-chart'}
                 data={rigisterInfo?.list || []}
               />
-            </Col>
-          </Row>
-        </Card>
+            </Card>
+          </Col>
+        </Row>
         <Card>
           <Flex
             align='center'
-            justify='space-between'
-            style={{
-              marginBottom: '16px'
-            }}
+            gap={'12px'}
           >
-            <h4 className={styles.subtitle}>系统公告</h4>
+            <label className={styles.label}>财务</label>
+          </Flex>
+          <h4 className={styles.title}>访问量</h4>
+          <Flex
+            justify='space-between'
+            align='center'
+          >
             <Flex
               align='center'
-              gap={'8px'}
-              style={{
-                color: '#4081FF',
-                fontSize: '14px',
-                fontWeight: 500,
-                cursor: 'pointer'
-              }}
+              gap={'60px'}
             >
-              查看全部
-              <img
-                src={Arrow}
-                className={styles.arrow}
-              />
+              <Flex
+                vertical={true}
+                gap={'12px'}
+              >
+                <label className={styles.label}>昨日</label>
+                <span>{statesInfo?.yesterday}</span>
+              </Flex>
+              <Flex
+                vertical={true}
+                gap={'12px'}
+              >
+                <label className={styles.label}>本月</label>
+                <span>{statesInfo?.month}</span>
+              </Flex>
+              <Flex
+                vertical={true}
+                gap={'12px'}
+              >
+                <label className={styles.label}>本年</label>
+                <span>{statesInfo?.year}</span>
+              </Flex>
+            </Flex>
+            <Flex
+              align='center'
+              gap={'24px'}
+            >
+              <Button
+                type={type == 'month' ? 'primary' : 'default'}
+                onClick={()=>{setType('month')}}
+              >
+                本月
+              </Button>
+              <Button
+                type={type == 'year' ? 'primary' : 'default'}
+                onClick={()=>{setType('year')}}
+              >
+                本年
+              </Button>
             </Flex>
           </Flex>
-          <Row gutter={16}>
-            {
-              noticeList && noticeList.map(item =>
-                <Col 
-                  span={8}
-                  key={item.id}
-                  style={{
-                    background: '#F9FBFE'
-                  }}
-                >
-                  <Flex
-                    align='center'
-                    justify='space-between'
-                    style={{
-                      marginBottom: '16px'
-                    }}
-                  >
-                    <label className={styles.label}>{item?.type}</label>
-                    <span>{item?.publishTime}</span>
-                  </Flex>
-                  <Flex
-                    align='center'
-                    justify='space-between'
-                  >
-                    <Flex
-                      flex={1}
-                    >
-                      {item?.title}
-                    </Flex>
-                    <Flex
-                      align='center'
-                    >
-                      <Button
-                        type='primary'
-                      >
-                        编辑
-                      </Button>
-                      <Button
-                        type='danger'
-                      >
-                        删除
-                      </Button>
-                    </Flex>
-                  </Flex>
-                </Col>
-              )
-            }
-          </Row>
+          <ChartLine 
+            id={'visit-chart'}
+            data={[
+              {
+                date: '2023-04-01',
+                visits: 100,
+                yoy: 100,
+              },
+              {
+                date: '2023-04-02',
+                visits: 300,
+                yoy: 100,
+              },
+              {
+                date: '2023-04-03',
+                visits: 200,
+                yoy: 100,
+              },
+            ]}
+          />
         </Card>
       </Space>
     </PageContainer>

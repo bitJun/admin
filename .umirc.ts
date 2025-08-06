@@ -55,7 +55,18 @@ export default defineConfig({
     {
       name: '文章管理',
       path: '/article',
-      component: './Article',
+      routes: [
+        {
+          name: '升学规划',
+          path: '/article/school',
+          component: './Article/school',
+        },
+        {
+          name: '军旅规划',
+          path: '/article/army',
+          component: './Article/army',
+        },
+      ],
     },
     {
       name: '财务管理',

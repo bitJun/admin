@@ -181,18 +181,6 @@ export async function queryArticles(data: any) {
 }
 
 /**
- * 查看文章详情
- * @param data 
- * @returns 
- */
-export async function queryArticlesById(params?: any) {
-  return request(`/api/articles/${params.id}`, {
-    method: 'GET',
-    params,
-  })
-}
-
-/**
  * 创建或更新会员卡价格
  * @param data 
  * @returns 
@@ -285,5 +273,99 @@ export async function queryEventsPage(params?: any) {
   return request(`/api/events/page`, {
     method: 'GET',
     params,
+  })
+}
+
+export async function queryFinanceList(data: any) {
+  return request('/api/order/select', {
+    method: 'POST',
+    data,
+  })
+}
+
+//查询当前所有商品
+export async function queryProductList(params?: any) {
+  return request(`/api/product/now_product`, {
+    method: 'GET',
+    params,
+  })
+}
+
+//查询当前所有商品
+export async function queryVipInfo(params?: any) {
+  return request(`/admin/vip/info`, {
+    method: 'GET',
+    params,
+  })
+}
+
+//修改会员卡价格
+export async function updatePorduct(data: any) {
+  return request('/api/product/update_product', {
+    method: 'POST',
+    data,
+  })
+}
+
+//修改会员卡价格
+export async function updateInfoByVipLevel(data: any) {
+  return request('/admin/vip/infoByVipLevel', {
+    method: 'POST',
+    data,
+  })
+}
+
+//删除文章
+export async function delArticles(params?: any) {
+  return request(`/api/articles/delete`, {
+    method: 'GET',
+    params,
+  })
+}
+
+//查询文章领域
+export async function queryArticlesFields(params?: any) {
+  return request(`/api/articles/fields`, {
+    method: 'GET',
+    params,
+  })
+}
+
+//查看文章详情
+export async function queryArticlesById(id?: any) {
+  return request(`/api/articles/${id}`, {
+    method: 'GET',
+  })
+}
+
+//查询所有标签
+export async function queryArticlesTags(params?: any) {
+  return request(`/api/articles/tags`, {
+    method: 'GET',
+    params,
+  })
+}
+
+//修改文章
+export async function updateArticles(data: any) {
+  return request('/api/articles/edit', {
+    method: 'POST',
+    data,
+  })
+}
+
+//新增文章
+export async function addArticles(data: any) {
+  return request('/api/articles', {
+    method: 'POST',
+    data,
+  })
+}
+
+//分页查询文章
+export async function queryArticlesList(data: any) {
+  return request('/api/articles/query', {
+    method: 'POST',
+    data,
   })
 }
