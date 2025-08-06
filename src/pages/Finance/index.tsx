@@ -19,6 +19,7 @@ type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'
 
 const columns: TableColumnsType= [
   { title: '序号', dataIndex: 'index' },
+  { title: '用户名', dataIndex: 'userName', render: (text, record, index) => record.username },
   { title: '用户ID', dataIndex: 'userId', render: (text, record, index) => record.order.buyerId },
   { title: '充值时间', dataIndex: 'createdTime', render: (text, record, index) => record.order.createTime },
   { title: '充值金额(元)', dataIndex: 'address', render: (text, record, index) => <span>{record.order.amount}元</span> },
@@ -33,6 +34,7 @@ const FinancePage = () => {
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [userId, setUserId] = useState<number>();
+  const [userName, setUserName] = useState<string>('');
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -46,7 +48,7 @@ const FinancePage = () => {
     let params = {
       page_id: pageIndex,
       page_size: pageSize,
-      user_name: ''
+      user_name: userName
     }
     queryFinanceList(params)
       .then((res)=>{
@@ -70,7 +72,7 @@ const FinancePage = () => {
   const hasSelected = selectedRowKeys.length > 0;
 
   const onSearch = () => {
-    
+    onLoadData();
   }
 
   return (
@@ -88,6 +90,11 @@ const FinancePage = () => {
             onSearch={onSearch}
             style={{
               width: 300,
+            }}
+            value={userName}
+            onInput={(val:any)=>{
+              console.log('val', val.target.value);
+              setUserName(val.target.value);
             }}
             enterButton="搜索"
           />

@@ -8,6 +8,13 @@ import {
   InputNumber,
   Card
 } from 'antd';
+import React, { useState, useEffect } from 'react';
+import {
+  queryProductList,
+  queryVipInfo,
+  updatePorduct,
+  updateInfoByVipLevel
+} from '@/services/api';
 import type { InputNumberProps } from 'antd';
 
 
@@ -18,6 +25,21 @@ const CardPage: React.FC = () => {
   const onChange: InputNumberProps['onChange'] = (value) => {
     console.log('changed', value);
   };
+
+  useEffect(()=>{
+    onLoadData();
+  }, []);
+
+  const onLoadData = () => {
+    queryProductList()
+      .then(res=>{
+        console.log('res', res);
+      })
+    queryVipInfo()
+      .then(res=>{
+        console.log('res', res);
+      })
+  }
 
   return (
     <PageContainer
