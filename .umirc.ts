@@ -92,6 +92,11 @@ export default defineConfig({
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
+    '/dev-api': {
+      target: 'https://youjia.529603395.xyz',
+      changeOrigin: true,
+      pathRewrite: { '^/dev-api': '' },
+    }
   },
 });
 

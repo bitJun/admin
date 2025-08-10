@@ -1,5 +1,6 @@
 import { extend } from 'umi-request';
 import { message } from 'antd';
+import { history } from 'umi';
 
 // 错误码对应消息
 const codeMessage: Record<number, string> = {
@@ -16,9 +17,14 @@ const codeMessage: Record<number, string> = {
 const errorHandler = (error: any) => {
   const { response } = error
   if (response && response.status) {
-    const errorText = codeMessage[response.status] || response.statusText
-    const { status, url } = response
-    message.error(`${errorText}`)
+    if (response.status == 401) {
+      localStorage.clear();
+      history.push('/login?redirect=' + encodeURIComponent(location.pathname));
+    } else {
+      const errorText = codeMessage[response.status] || response.statusText
+      const { status, url } = response
+      message.error(`${errorText}`)
+    }
   } else if (!response) {
     message.error('网络异常，无法连接服务器')
   }
@@ -27,7 +33,7 @@ const errorHandler = (error: any) => {
 
 // 创建 request 实例
 const request = extend({
-  prefix: '/api', // 接口前缀
+  prefix: '', // 接口前缀
   timeout: 10000,
   credentials: 'include', // 自动携带 cookie
   errorHandler,

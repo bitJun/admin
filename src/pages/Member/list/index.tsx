@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-components';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Button,
   Flex,
@@ -11,20 +11,17 @@ import {
   Card
 } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
+import {
+  queryUserList
+} from '@/services/api';
 
 const { Search } = Input;
 const { RangePicker } = DatePicker;
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
 
-const columns: TableColumnsType<DataType> = [
+const columns: TableColumnsType<any> = [
   { title: '序号', dataIndex: 'name' },
   { title: '微信昵称', dataIndex: 'age' },
   { title: '注册手机号', dataIndex: 'address' },
@@ -40,7 +37,7 @@ const columns: TableColumnsType<DataType> = [
   { title: '目标院校', dataIndex: 'address' },
 ];
 
-const dataSource = Array.from<DataType>({ length: 46 }).map<DataType>((_, i) => ({
+const dataSource = Array.from<any>({ length: 46 }).map<any>((_, i) => ({
   key: i,
   name: `Edward King ${i}`,
   age: 32,
@@ -52,6 +49,31 @@ const MemberList = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
+  const pageIndex = useRef(1);
+
+  useEffect(()=>{
+    onLoadList();
+  }, []);
+
+  const onLoadList = () => {
+    let params = {
+      pageSize: 10,
+      pageIndex: pageIndex.current,
+      vip_level: 0,
+      key_word: '',
+      examination_year: '',
+      subject: '',
+      province: '',
+      begin_register_time: '',
+      end_register_time: '',
+      lowerest_score: '',
+      highest_score: ''
+    }
+    queryUserList(params)
+      .then(res=>{
+        console.log('res', res);
+      })
+  }
 
   const start = () => {
     setLoading(true);
@@ -67,7 +89,7 @@ const MemberList = () => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const rowSelection: TableRowSelection<DataType> = {
+  const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
   };

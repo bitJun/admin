@@ -6,7 +6,7 @@ import request from '@/utils/request';
  * @returns 
  */
 export async function queryUserInfo(params?: any) {
-  return request('/userinfo', {
+  return request('/api/userinfo', {
     method: 'GET',
     params,
   })
@@ -18,7 +18,7 @@ export async function queryUserInfo(params?: any) {
  * @returns 
  */
 export async function postLogin(data: any) {
-  return request('/login', {
+  return request('/api/login', {
     method: 'POST',
     data,
   })
@@ -30,7 +30,7 @@ export async function postLogin(data: any) {
  * @returns 
  */
 export async function queryNewUserState(params?: any) {
-  return request('/portal/new-user-stats', {
+  return request('/api/portal/new-user-stats', {
     method: 'GET',
     params,
   })
@@ -42,7 +42,7 @@ export async function queryNewUserState(params?: any) {
  * @returns 
  */
 export async function queryMiniprogramState(params?: any) {
-  return request('/portal/miniprogram-stats', {
+  return request('/api/portal/miniprogram-stats', {
     method: 'GET',
     params,
   })
@@ -54,7 +54,7 @@ export async function queryMiniprogramState(params?: any) {
  * @returns 
  */
 export async function queryBasicInfo(params?: any) {
-  return request('/portal/basic-info', {
+  return request('/api/portal/basic-info', {
     method: 'GET',
     params,
   })
@@ -66,7 +66,7 @@ export async function queryBasicInfo(params?: any) {
  * @returns 
  */
 export async function queryNotices(params?: any) {
-  return request('/api/notices', {
+  return request('/api/api/notices', {
     method: 'GET',
     params,
   })
@@ -78,7 +78,7 @@ export async function queryNotices(params?: any) {
  * @returns 
  */
 export async function postAddNotices(data: any) {
-  return request('/api/notices', {
+  return request('/api/api/notices', {
     method: 'POST',
     data,
   })
@@ -90,7 +90,7 @@ export async function postAddNotices(data: any) {
  * @returns 
  */
 export async function queryNoticesById(params?: any) {
-  return request(`/api/notices/${params.id}`, {
+  return request(`/api/api/notices/${params.id}`, {
     method: 'GET',
     params,
   })
@@ -102,7 +102,7 @@ export async function queryNoticesById(params?: any) {
  * @returns 
  */
 export async function postDeleteNotices(data: any) {
-  return request(`/api/notices/${data.id}`, {
+  return request(`/api/api/notices/${data.id}`, {
     method: 'DELETE',
     data,
   })
@@ -114,7 +114,7 @@ export async function postDeleteNotices(data: any) {
  * @returns 
  */
 export async function queryCadrList(data: any) {
-  return request('/admin/cards/page', {
+  return request('/api/admin/cards/page', {
     method: 'POST',
     data,
   })
@@ -126,7 +126,7 @@ export async function queryCadrList(data: any) {
  * @returns 
  */
 export async function postGenerateCadrs(data: any) {
-  return request('/admin/cards/generate', {
+  return request('/api/admin/cards/generate', {
     method: 'POST',
     data,
   })
@@ -138,7 +138,7 @@ export async function postGenerateCadrs(data: any) {
  * @returns 
  */
 export async function queryCardsNumbers(params?: any) {
-  return request(`/admin/cards/numbers`, {
+  return request(`/api/admin/cards/numbers`, {
     method: 'GET',
     params,
   })
@@ -150,7 +150,7 @@ export async function queryCardsNumbers(params?: any) {
  * @returns 
  */
 export async function queryDict(params?: any) {
-  return request(`/api/dict/${params.key}`, {
+  return request(`/api/api/dict/${params.key}`, {
     method: 'GET',
     params,
   })
@@ -162,7 +162,7 @@ export async function queryDict(params?: any) {
  * @returns 
  */
 export async function postAddArticles(data: any) {
-  return request('/api/articles', {
+  return request('/api/api/articles', {
     method: 'POST',
     data,
   })
@@ -174,7 +174,7 @@ export async function postAddArticles(data: any) {
  * @returns 
  */
 export async function queryArticles(data: any) {
-  return request('/api/articles/query', {
+  return request('/api/api/articles/query', {
     method: 'POST',
     data,
   })
@@ -186,7 +186,7 @@ export async function queryArticles(data: any) {
  * @returns 
  */
 export async function postMembershipCards(data: any) {
-  return request('/api/membership-cards', {
+  return request('/api/api/membership-cards', {
     method: 'POST',
     data,
   })
@@ -198,7 +198,7 @@ export async function postMembershipCards(data: any) {
  * @returns 
  */
 export async function queryMembershipCards(params?: any) {
-  return request(`/api/membership-cards`, {
+  return request(`/api/api/membership-cards`, {
     method: 'GET',
     params,
   })
@@ -210,7 +210,7 @@ export async function queryMembershipCards(params?: any) {
  * @returns 
  */
 export async function postAddEvents(data: any) {
-  return request('/api/events', {
+  return request('/api/api/events', {
     method: 'POST',
     data,
   })
@@ -222,7 +222,7 @@ export async function postAddEvents(data: any) {
  * @returns 
  */
 export async function postDelEventsById(data: any) {
-  return request(`/api/events/${data.id}`, {
+  return request(`/api/api/events/${data.id}`, {
     method: 'DELETE',
     data,
   })
@@ -234,7 +234,7 @@ export async function postDelEventsById(data: any) {
  * @returns 
  */
 export async function queryEventsById(params?: any) {
-  return request(`/api/events/${params.id}`, {
+  return request(`/api/api/events/${params.id}`, {
     method: 'GET',
     params,
   })
@@ -246,7 +246,7 @@ export async function queryEventsById(params?: any) {
  * @returns 
  */
 export async function queryEventsList(params?: any) {
-  return request(`/api/events`, {
+  return request(`/api/api/events`, {
     method: 'GET',
     params,
   })
@@ -258,7 +258,7 @@ export async function queryEventsList(params?: any) {
  * @returns 
  */
 export async function putEventsById(data: any) {
-  return request(`/api/events/${data.id}`, {
+  return request(`/api/api/events/${data.id}`, {
     method: 'PUT',
     data,
   })
@@ -270,14 +270,14 @@ export async function putEventsById(data: any) {
  * @returns 
  */
 export async function queryEventsPage(params?: any) {
-  return request(`/api/events/page`, {
+  return request(`/api/api/events/page`, {
     method: 'GET',
     params,
   })
 }
 
 export async function queryFinanceList(data: any) {
-  return request('/api/order/select', {
+  return request('/api/api/order/select', {
     method: 'POST',
     data,
   })
@@ -285,7 +285,7 @@ export async function queryFinanceList(data: any) {
 
 //查询当前所有商品
 export async function queryProductList(params?: any) {
-  return request(`/api/product/now_product`, {
+  return request(`/api/api/product/now_product`, {
     method: 'GET',
     params,
   })
@@ -293,7 +293,7 @@ export async function queryProductList(params?: any) {
 
 //查询当前所有商品
 export async function queryVipInfo(params?: any) {
-  return request(`/admin/vip/info`, {
+  return request(`/api/admin/vip/info`, {
     method: 'GET',
     params,
   })
@@ -301,7 +301,7 @@ export async function queryVipInfo(params?: any) {
 
 //修改会员卡价格
 export async function updatePorduct(data: any) {
-  return request('/api/product/update_product', {
+  return request('/api/api/product/update_product', {
     method: 'POST',
     data,
   })
@@ -309,7 +309,7 @@ export async function updatePorduct(data: any) {
 
 //修改会员卡价格
 export async function updateInfoByVipLevel(data: any) {
-  return request('/admin/vip/infoByVipLevel', {
+  return request('/api/admin/vip/infoByVipLevel', {
     method: 'POST',
     data,
   })
@@ -317,7 +317,7 @@ export async function updateInfoByVipLevel(data: any) {
 
 //删除文章
 export async function delArticles(params?: any) {
-  return request(`/api/articles/delete`, {
+  return request(`/api/api/articles/delete`, {
     method: 'GET',
     params,
   })
@@ -325,7 +325,7 @@ export async function delArticles(params?: any) {
 
 //查询文章领域
 export async function queryArticlesFields(params?: any) {
-  return request(`/api/articles/fields`, {
+  return request(`/api/api/articles/fields`, {
     method: 'GET',
     params,
   })
@@ -333,14 +333,14 @@ export async function queryArticlesFields(params?: any) {
 
 //查看文章详情
 export async function queryArticlesById(id?: any) {
-  return request(`/api/articles/${id}`, {
+  return request(`/api/api/articles/${id}`, {
     method: 'GET',
   })
 }
 
 //查询所有标签
 export async function queryArticlesTags(params?: any) {
-  return request(`/api/articles/tags`, {
+  return request(`/api/api/articles/tags`, {
     method: 'GET',
     params,
   })
@@ -348,7 +348,7 @@ export async function queryArticlesTags(params?: any) {
 
 //修改文章
 export async function updateArticles(data: any) {
-  return request('/api/articles/edit', {
+  return request('/api/api/articles/edit', {
     method: 'POST',
     data,
   })
@@ -356,7 +356,7 @@ export async function updateArticles(data: any) {
 
 //新增文章
 export async function addArticles(data: any) {
-  return request('/api/articles', {
+  return request('/api/api/articles', {
     method: 'POST',
     data,
   })
@@ -364,8 +364,17 @@ export async function addArticles(data: any) {
 
 //分页查询文章
 export async function queryArticlesList(data: any) {
-  return request('/api/articles/query', {
+  return request('/api/api/articles/query', {
     method: 'POST',
     data,
   })
 }
+
+//分页查询文章
+export async function queryUserList(data: any) {
+  return request('/dev-api/api/user/search', {
+    method: 'POST',
+    data,
+  })
+}
+
