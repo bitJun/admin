@@ -22,19 +22,15 @@ type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'
 
 
 const columns: TableColumnsType<any> = [
-  { title: '序号', dataIndex: 'name' },
-  { title: '微信昵称', dataIndex: 'age' },
-  { title: '注册手机号', dataIndex: 'address' },
-  { title: '注册时间', dataIndex: 'address' },
-  { title: '学生姓名', dataIndex: 'address' },
-  { title: '性别', dataIndex: 'address' },
-  { title: '年龄', dataIndex: 'address' },
-  { title: '高考年份', dataIndex: 'address' },
-  { title: '科目', dataIndex: 'address' },
-  { title: '省份', dataIndex: 'address' },
-  { title: '成绩', dataIndex: 'address' },
-  { title: '会员卡号', dataIndex: 'address' },
-  { title: '目标院校', dataIndex: 'address' },
+  { title: '序号', dataIndex: 'id' },
+  { title: '微信昵称', dataIndex: 'name' },
+  { title: '注册手机号', dataIndex: 'tel' },
+  { title: '注册时间', dataIndex: 'register_time' },
+  { title: '高考年份', dataIndex: 'examination_year' },
+  { title: '科目', dataIndex: 'high_school_subject' },
+  { title: '省份', dataIndex: 'province' },
+  { title: '成绩', dataIndex: 'score' },
+  { title: '会员级别', dataIndex: 'vip_level' },
 ];
 
 const dataSource = Array.from<any>({ length: 46 }).map<any>((_, i) => ({
@@ -49,7 +45,12 @@ const MemberList = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState('');
   const pageIndex = useRef(1);
+  const pageSize = useRef(10);
+  const [list, setList] = useState([]);
+  const examinationYear = useRef('');
+  const [total, setTotal] = useState(0);
 
   useEffect(()=>{
     onLoadList();
@@ -57,11 +58,11 @@ const MemberList = () => {
 
   const onLoadList = () => {
     let params = {
-      pageSize: 10,
+      pageSize: pageSize.current,
       pageIndex: pageIndex.current,
       vip_level: 0,
-      key_word: '',
-      examination_year: '',
+      key_word: keyword,
+      examination_year: examinationYear.current,
       subject: '',
       province: '',
       begin_register_time: '',
@@ -72,6 +73,8 @@ const MemberList = () => {
     queryUserList(params)
       .then(res=>{
         console.log('res', res);
+        setList(res.data);
+        setTotal(res.total)
       })
   }
 
@@ -95,7 +98,8 @@ const MemberList = () => {
   };
 
   const onSearch = () => {
-    
+    pageIndex.current = 1;
+    onLoadList();
   }
 
   const handleChange = (value: string) => {
@@ -117,26 +121,34 @@ const MemberList = () => {
             <Search
               placeholder="来源标识/学生/家长/老师/手机号/卡号"
               onSearch={onSearch}
+              onChange={e=>setKeyword(e.target.value)}
               style={{
                 width: 400,
               }}
               enterButton="搜索"
             />
             <Flex justify={'flex-start'} align={'center'} gap={10}>
-              <Button type="primary">创建用户</Button>
               <Button type="primary">导出Excel</Button>
             </Flex>
           </Flex>
           <Flex justify={'flex-start'} align={'center'} gap={10}>
             <Select
-              defaultValue="lucy"
+              defaultValue="高考年份"
               style={{ width: 120 }}
-              onChange={handleChange}
+              value={examinationYear.current}
+              onChange={(value)=>{
+                console.log('value', value)
+                examinationYear.current = value;
+                pageIndex.current = 1;
+                onLoadList();
+              }}
               options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
+                { value: '2021', label: '2021' },
+                { value: '2022', label: '2022' },
+                { value: '2023', label: '2023' },
+                { value: '2024', label: '2024' },
+                { value: '2025', label: '2025' },
+                { value: '2026', label: '2026' },
               ]}
             />
             <Select
@@ -194,17 +206,20 @@ const MemberList = () => {
               筛选
             </Button>
           </Flex>
-          <Table<DataType>
+          <Table<any>
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={dataSource}
+            dataSource={list}
             pagination={{
-              total: 85,
+              total: total,
               defaultCurrent: 1,
               defaultPageSize: 10,
               showSizeChanger: true,
               showTotal: total => `Total ${total} Items`,
-              onChange: (page, pageSize) => {
+              onChange: (page, size) => {
+                pageIndex.current = page;
+                pageSize.current = size;
+                onLoadList();
                 console.log(page, pageSize);
               },
               onShowSizeChange: (current, size) => {

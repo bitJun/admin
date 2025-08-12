@@ -5,7 +5,16 @@ import {
   queryNewUserState,
   queryMiniprogramState,
   queryBasicInfo,
-  queryNotices
+  queryNotices,
+  queryOperations,
+  queryOperationsMonth,
+  queryOperationsYear,
+  queryOperationsMonthRegisters,
+  queryOperationsYearRegisters,
+  queryOperationsMonthVips,
+  queryOperationsYearVips,
+  queryOperationsMonthIncome,
+  queryOperationsYearIncome,
 } from '@/services/api';
 import Logo from '@/assets/logo.png';
 import Arrow from '@/assets/arrow.png';
@@ -56,12 +65,20 @@ const HomePage: React.FC = () => {
   const [statesInfo, setStatesInfo] = useState<statesInfoProps>();
   const [rigisterInfo, setRigisterInfo] = useState<statesInfoProps>();
   const [type, setType] = useState<string>('month');
+  const [incomeType, setIncomeType] = useState<string>('month');
   const [rigisterType, setRigisterType] = useState<string>('month');
   const [noticeList, setNoticeList] = useState<Array<NoticeItemProps> | []>([]);
+  const [operationsInfo, setOperationsInfo] = useState<any>({});
+  const [types, setTypes] = useState('register')
 
   useEffect(()=>{
     onLoadBasicInfo();
     onLoadNotce();
+    onLoadOperations();
+    // onLoadOperationsMonth();
+    // onLoadOperationsMonthRegisters();
+    // onLoadOperationsMonthVips();
+    // onLoadOperationsMonthIncome();
   }, []);
 
   useEffect(()=>{
@@ -71,6 +88,94 @@ const HomePage: React.FC = () => {
   useEffect(()=>{
     onLoadNewUserState();
   }, [rigisterType]);
+
+  const onLoadOperations = () => {
+    queryOperations()
+      .then((res) => {
+        setOperationsInfo(res);
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsMonth = () => {
+    queryOperationsMonth()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsYear = () => {
+    queryOperationsYear()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsMonthRegisters = () => {
+    queryOperationsMonthRegisters()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsYearRegisters = () => {
+    queryOperationsYearRegisters()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsMonthVips = () => {
+    queryOperationsMonthVips()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsYearVips = () => {
+    queryOperationsYearVips()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsMonthIncome = () => {
+    queryOperationsMonthIncome()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
+
+  const onLoadOperationsYearIncome = () => {
+    queryOperationsYearIncome()
+      .then((res) => {
+        let {
+          data
+        } = res;
+        // setStatesInfo(data);
+      });
+  }
 
   const onLoadNewUserState = () => {
     let params = {
@@ -237,21 +342,21 @@ const HomePage: React.FC = () => {
                     gap={'12px'}
                   >
                     <label className={styles.label}>昨日</label>
-                    <span>{statesInfo?.yesterday}</span>
+                    <span>{operationsInfo?.lastDayActiveUsers}</span>
                   </Flex>
                   <Flex
                     vertical={true}
                     gap={'12px'}
                   >
                     <label className={styles.label}>本月</label>
-                    <span>{statesInfo?.month}</span>
+                    <span>{operationsInfo?.thisMonthActiveUsers}</span>
                   </Flex>
                   <Flex
                     vertical={true}
                     gap={'12px'}
                   >
                     <label className={styles.label}>本年</label>
-                    <span>{statesInfo?.year}</span>
+                    <span>{operationsInfo?.thisYearActiveUsers}</span>
                   </Flex>
                 </Flex>
                 <Flex
@@ -300,8 +405,8 @@ const HomePage: React.FC = () => {
                 align='center'
                 gap={'12px'}
               >
-                <label className={styles.label}>注册用户</label>
-                <label className={styles.label}>VIP用户</label>
+                <label className={styles.label} onClick={()=>{setTypes('register')}}>注册用户</label>
+                <label className={styles.label} onClick={()=>{setTypes('vips')}}>VIP用户</label>
               </Flex>
               <h4 className={styles.title}>注册量</h4>
               <Flex
@@ -317,21 +422,21 @@ const HomePage: React.FC = () => {
                     gap={'12px'}
                   >
                     <label className={styles.label}>昨日</label>
-                    <span>{rigisterInfo?.yesterday}</span>
+                    <span>{types == 'register' ? operationsInfo?.lastDayNewUsers : operationsInfo?.lastDayNewVips}</span>
                   </Flex>
                   <Flex
                     vertical={true}
                     gap={'12px'}
                   >
                     <label className={styles.label}>本月</label>
-                    <span>{rigisterInfo?.month}</span>
+                    <span>{types == 'register' ? operationsInfo?.thisMonthNewUsers : operationsInfo?.thisMonthNewVips}</span>
                   </Flex>
                   <Flex
                     vertical={true}
                     gap={'12px'}
                   >
                     <label className={styles.label}>本年</label>
-                    <span>{rigisterInfo?.year}</span>
+                    <span>{types == 'register' ? operationsInfo?.thisYearNewUsers : operationsInfo?.thisYearNewVips}</span>
                   </Flex>
                 </Flex>
                 <Flex
@@ -366,7 +471,7 @@ const HomePage: React.FC = () => {
           >
             <label className={styles.label}>财务</label>
           </Flex>
-          <h4 className={styles.title}>访问量</h4>
+          <h4 className={styles.title}>营收</h4>
           <Flex
             justify='space-between'
             align='center'
@@ -379,22 +484,22 @@ const HomePage: React.FC = () => {
                 vertical={true}
                 gap={'12px'}
               >
-                <label className={styles.label}>昨日</label>
-                <span>{statesInfo?.yesterday}</span>
+                <label className={styles.label}>收入总计</label>
+                <span>{operationsInfo?.totalIncome}</span>
               </Flex>
               <Flex
                 vertical={true}
                 gap={'12px'}
               >
-                <label className={styles.label}>本月</label>
-                <span>{statesInfo?.month}</span>
+                <label className={styles.label}>普通VIP</label>
+                <span>{incomeType == 'month' ? operationsInfo?.thisMonthNormalVipIncome : operationsInfo?.thisYearNormalVipIncome}</span>
               </Flex>
               <Flex
                 vertical={true}
                 gap={'12px'}
               >
-                <label className={styles.label}>本年</label>
-                <span>{statesInfo?.year}</span>
+                <label className={styles.label}>超级VIP</label>
+                <span>{incomeType == 'month' ? operationsInfo?.thisMonthSuperVipIncome : operationsInfo?.thisYearSuperVipIncome}</span>
               </Flex>
             </Flex>
             <Flex
@@ -402,14 +507,14 @@ const HomePage: React.FC = () => {
               gap={'24px'}
             >
               <Button
-                type={type == 'month' ? 'primary' : 'default'}
-                onClick={()=>{setType('month')}}
+                type={incomeType == 'month' ? 'primary' : 'default'}
+                onClick={()=>{setIncomeType('month')}}
               >
                 本月
               </Button>
               <Button
-                type={type == 'year' ? 'primary' : 'default'}
-                onClick={()=>{setType('year')}}
+                type={incomeType == 'year' ? 'primary' : 'default'}
+                onClick={()=>{setIncomeType('year')}}
               >
                 本年
               </Button>

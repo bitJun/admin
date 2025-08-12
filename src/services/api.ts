@@ -372,9 +372,71 @@ export async function queryArticlesList(data: any) {
 
 //分页查询文章
 export async function queryUserList(data: any) {
-  return request('/dev-api/api/user/search', {
+  return request('/api/api/wechatUser/search', {
     method: 'POST',
     data,
   })
 }
 
+//查看文章详情
+export async function queryOperations() {
+  return request(`/api/api/operations/show`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsMonth() {
+  return request(`/api/api/operations/month_visitors`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsYear() {
+  return request(`/api/api/operations/year_visitors`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsMonthRegisters() {
+  return request(`/api/api/operations/month_registers`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsYearRegisters() {
+  return request(`/api/api/operations/year_registers`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsMonthVips() {
+  return request(`/api/api/operations/month_vips`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsYearVips() {
+  return request(`/api/api/operations/year_vips`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsMonthIncome() {
+  return request(`/api/api/operations/month_income`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryOperationsYearIncome() {
+  return request(`/api/api/operations/year_income`, {
+    method: 'GET',
+  })
+}
