@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
+import { Chart } from '@antv/g2';
 import {
-  queryNewUserState,
-  queryMiniprogramState,
-  queryBasicInfo,
-  queryNotices,
   queryOperations,
   queryOperationsMonth,
   queryOperationsYear,
@@ -16,8 +13,6 @@ import {
   queryOperationsMonthIncome,
   queryOperationsYearIncome,
 } from '@/services/api';
-import Logo from '@/assets/logo.png';
-import Arrow from '@/assets/arrow.png';
 import {
   Flex,
   Col,
@@ -26,7 +21,6 @@ import {
   Space,
   Button
 } from 'antd';
-import dayjs from 'dayjs'
 import ChartLine from '@/components/Chart';
 import styles from './index.less';
 
@@ -61,264 +55,205 @@ interface NoticeItemProps {
 
 const HomePage: React.FC = () => {
   const { name } = useModel('global');
-  const [basicInfo, setBasicInfo] = useState<basicInfoProps>();
-  const [statesInfo, setStatesInfo] = useState<statesInfoProps>();
-  const [rigisterInfo, setRigisterInfo] = useState<statesInfoProps>();
   const [type, setType] = useState<string>('month');
   const [incomeType, setIncomeType] = useState<string>('month');
   const [rigisterType, setRigisterType] = useState<string>('month');
-  const [noticeList, setNoticeList] = useState<Array<NoticeItemProps> | []>([]);
   const [operationsInfo, setOperationsInfo] = useState<any>({});
-  const [types, setTypes] = useState('register')
+  const [operationsList, setOperationsList] = useState<any>([]);
+  const [rigisterList, setRigisterList] = useState<any>([]);
+  const [vipsList, setVipsList] = useState<any>([]);
+  const [types, setTypes] = useState('register');
+  const [incomeList, setIncomeList] = useState<any>([]);
 
   useEffect(()=>{
-    onLoadBasicInfo();
-    onLoadNotce();
     onLoadOperations();
-    // onLoadOperationsMonth();
-    // onLoadOperationsMonthRegisters();
-    // onLoadOperationsMonthVips();
-    // onLoadOperationsMonthIncome();
   }, []);
 
   useEffect(()=>{
-    onLoadStatesInfo();
+    if (type == 'month') {
+      onLoadOperationsMonth();
+    } else {
+      onLoadOperationsYear();
+    }
   }, [type]);
 
   useEffect(()=>{
-    onLoadNewUserState();
-  }, [rigisterType]);
+    if (types == 'register') {
+      if (rigisterType == 'month') {
+        onLoadOperationsMonthRegisters();
+      } else {
+        onLoadOperationsYearRegisters();
+      }
+    } else {
+      if (rigisterType == 'month') {
+        onLoadOperationsMonthVips();
+      } else {
+        onLoadOperationsYearVips();
+      }
+    }
+  }, [types ,rigisterType]);
+
+  useEffect(()=>{
+    if (incomeType == 'month') {
+      onLoadOperationsMonthIncome();
+    } else {
+      onLoadOperationsYearIncome();
+    }
+  }, [incomeType]);
+
+  useEffect(()=>{
+    if (incomeList) {
+      const chart = new Chart({
+        container: 'income',
+        autoFit: true,
+        height: 270,
+      });
+      
+      chart
+        .data(incomeList)
+        .encode('x', 'date')
+        .encode('y', 'visits')
+        // .encode('color', 'city')
+        .scale('x', {
+          range: [0, 1],
+        })
+        .scale('y', {
+          nice: true,
+        })
+        .axis('y', { labelFormatter: (d:any) => d + '人数' });
+
+      chart.options({
+        tooltip: {
+          items: [
+            {name: '张三', channel: ''},
+            {name: '李四', channel: ''},
+          ],
+        },
+      })
+      
+      chart.line().encode('shape', 'smooth');
+      
+      chart.point().encode('shape', 'point')
+      
+      chart.render();
+      return () => {
+        chart.destroy();
+      };
+    }
+  }, [incomeList]); 
 
   const onLoadOperations = () => {
     queryOperations()
       .then((res) => {
         setOperationsInfo(res);
-        // setStatesInfo(data);
       });
   }
 
   const onLoadOperationsMonth = () => {
     queryOperationsMonth()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if (res) {
+          res = res.map((item:any)=>{
+            item.visits = item.currentValue;
+            item.yoy = item.compareValue;
+            return item;
+          })
+          setOperationsList(res);
+        }
       });
   }
 
   const onLoadOperationsYear = () => {
     queryOperationsYear()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if (res) {
+          res = res.map((item:any)=>{
+            item.visits = item.currentValue;
+            item.yoy = item.compareValue;
+            return item;
+          })
+          setOperationsList(res);
+        }
       });
   }
 
   const onLoadOperationsMonthRegisters = () => {
     queryOperationsMonthRegisters()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if(res) {
+          res = res.map((item:any)=>{
+            item.visits = item.currentValue;
+            item.yoy = item.compareValue;
+            return item;
+          })
+          setRigisterList(res);
+        }
       });
   }
 
   const onLoadOperationsYearRegisters = () => {
     queryOperationsYearRegisters()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if(res) {
+          res = res.map((item:any)=>{
+            item.visits = item.currentValue;
+            item.yoy = item.compareValue;
+            return item;
+          })
+          setRigisterList(res);
+        }
       });
   }
 
   const onLoadOperationsMonthVips = () => {
     queryOperationsMonthVips()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if(res) {
+          res = res.map((item:any)=>{
+            item.visits = item.currentValue;
+            item.yoy = item.compareValue;
+            return item;
+          })
+          setVipsList(res);
+        }
       });
   }
 
   const onLoadOperationsYearVips = () => {
     queryOperationsYearVips()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if(res) {
+          res = res.map((item:any)=>{
+            item.visits = item.currentValue;
+            item.yoy = item.compareValue;
+            return item;
+          })
+          setVipsList(res);
+        }
       });
   }
 
   const onLoadOperationsMonthIncome = () => {
     queryOperationsMonthIncome()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if (res) {
+          setIncomeList(res);
+        }
       });
   }
 
   const onLoadOperationsYearIncome = () => {
     queryOperationsYearIncome()
       .then((res) => {
-        let {
-          data
-        } = res;
-        // setStatesInfo(data);
+        if (res) {
+          setIncomeList(res);
+        }
       });
-  }
-
-  const onLoadNewUserState = () => {
-    let params = {
-      startDate: '',
-      endDate: ''
-    }
-    if (rigisterType == 'month') {
-      params.startDate = dayjs().startOf('month').format('YYYY-MM-DD');
-      params.endDate = dayjs().endOf('month').format('YYYY-MM-DD');
-    } else {
-      params.startDate = dayjs().startOf('year').format('YYYY-MM-DD');
-      params.endDate = dayjs().endOf('year').format('YYYY-MM-DD');
-    }
-    queryNewUserState(params)
-     .then((res) => {
-        let {
-          data
-        } = res;
-        setRigisterInfo(data);
-        // setStatesInfo(data);
-        // console.log('data', data);
-      });
-  }
-
-  const onLoadBasicInfo = () => {
-    queryBasicInfo()
-      .then((res) => {
-        let {
-          data
-        } = res;
-        setBasicInfo(data);
-      });
-  }
-
-  const onLoadStatesInfo = () => {
-    let params = {
-      startDate: '',
-      endDate: ''
-    }
-    if (type == 'month') {
-      params.startDate = dayjs().startOf('month').format('YYYY-MM-DD');
-      params.endDate = dayjs().endOf('month').format('YYYY-MM-DD');
-    } else {
-      params.startDate = dayjs().startOf('year').format('YYYY-MM-DD');
-      params.endDate = dayjs().endOf('year').format('YYYY-MM-DD');
-    }
-    queryMiniprogramState(params)
-      .then((res) => {
-        let {
-          data
-        } = res;
-        setStatesInfo(data);
-      });
-  }
-
-  const onLoadNotce = () => {
-    queryNotices({
-      page: 1,
-      size: 10
-    }).then((res) => {
-      let {
-        data
-      } = res;
-      // setStatesInfo(data);
-      console.log('data1', data);
-      setNoticeList(data);
-    });
   }
 
   return (
     <PageContainer ghost>
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        {/* <Card>
-          <Row gutter={16}>
-            <Col className="gutter-row" span={6}>
-              <Flex align='center' gap={'16px'}>
-                <img
-                  src={Logo}
-                  className={styles.logo}
-                />
-                高考后台
-              </Flex>
-            </Col>
-            <Col className="gutter-row" span={6}>
-              <Flex
-                vertical={true}
-                gap={'16px'}
-              >
-                <Flex
-                  align='center'
-                  gap={'12px'}
-                >
-                  <label className={styles.label}>开通省份：</label>{basicInfo?.activatedProvinces.length}
-                </Flex>
-                <Flex
-                  align='center'
-                  gap={'12px'}
-                >
-                  <label className={styles.label}>默认省份：</label>{basicInfo?.defaultProvince}
-                </Flex>
-              </Flex>
-            </Col>
-            <Col className="gutter-row" span={6}>
-              <Flex
-                vertical={true}
-                gap={'16px'}
-              >
-                <Flex
-                  align='center'
-                  gap={'12px'}
-                >
-                  <label className={styles.label}>账号数：</label>{basicInfo?.accountCount}
-                </Flex>
-                <Flex
-                  align='center'
-                  gap={'12px'}
-                >
-                  <label className={styles.label}>已使用：</label>{basicInfo?.usedCount}
-                </Flex>
-              </Flex>
-            </Col>
-            <Col className="gutter-row" span={6}>
-              <Flex
-                vertical={true}
-                gap={'16px'}
-              >
-                <Flex
-                  align='center'
-                  gap={'12px'}
-                >
-                  <label className={styles.label}>机构余额（元）：</label>
-                </Flex>
-                <Flex
-                  align='center'
-                  gap={'12px'}
-                >
-                  <label className={styles.recharge}>充值</label>
-                </Flex>
-              </Flex>
-            </Col>
-          </Row>
-        </Card> */}
-        
         <Row gutter={16}>
           <Col className="gutter-row" span={12}>
             <Card>
@@ -379,23 +314,7 @@ const HomePage: React.FC = () => {
               </Flex>
               <ChartLine 
                 id={'visit-chart'}
-                data={[
-                  {
-                    date: '2023-04-01',
-                    visits: 100,
-                    yoy: 100,
-                  },
-                  {
-                    date: '2023-04-02',
-                    visits: 300,
-                    yoy: 100,
-                  },
-                  {
-                    date: '2023-04-03',
-                    visits: 200,
-                    yoy: 100,
-                  },
-                ]}
+                data={operationsList}
               />
             </Card>
           </Col>
@@ -405,10 +324,12 @@ const HomePage: React.FC = () => {
                 align='center'
                 gap={'12px'}
               >
-                <label className={styles.label} onClick={()=>{setTypes('register')}}>注册用户</label>
-                <label className={styles.label} onClick={()=>{setTypes('vips')}}>VIP用户</label>
+                <label className={`${styles.label} ${types == 'register' ? `${styles.active}` : ''}`} onClick={()=>{setTypes('register')}}>注册用户</label>
+                <label className={`${styles.label} ${types == 'vips' ? `${styles.active}` : ''}`} onClick={()=>{setTypes('vips')}}>VIP用户</label>
               </Flex>
-              <h4 className={styles.title}>注册量</h4>
+              <h4 className={styles.title}>
+                {types == 'register' ? '注册量' : 'VIP量'}
+              </h4>
               <Flex
                 justify='space-between'
                 align='center'
@@ -459,7 +380,7 @@ const HomePage: React.FC = () => {
               </Flex>
               <ChartLine
                 id={'rigister-chart'}
-                data={rigisterInfo?.list || []}
+                data={types == 'register' ? rigisterList : vipsList}
               />
             </Card>
           </Col>
@@ -520,26 +441,7 @@ const HomePage: React.FC = () => {
               </Button>
             </Flex>
           </Flex>
-          <ChartLine 
-            id={'visit-chart'}
-            data={[
-              {
-                date: '2023-04-01',
-                visits: 100,
-                yoy: 100,
-              },
-              {
-                date: '2023-04-02',
-                visits: 300,
-                yoy: 100,
-              },
-              {
-                date: '2023-04-03',
-                visits: 200,
-                yoy: 100,
-              },
-            ]}
-          />
+          <div id='income'></div>
         </Card>
       </Space>
     </PageContainer>

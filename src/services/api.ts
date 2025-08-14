@@ -440,3 +440,41 @@ export async function queryOperationsYearIncome() {
     method: 'GET',
   })
 }
+
+//分页查询文章
+export async function queryCardList(data: any) {
+  return request('/api/admin/cards/cardList', {
+    method: 'POST',
+    data,
+  })
+}
+
+//分页查询文章
+export async function queryCardOrder(data: any) {
+  return request('/api/admin/cards/order', {
+    method: 'POST',
+    data,
+  })
+}
+
+//分页查询文章
+export async function queryCardGenerate(data: any) {
+  return request('/api/admin/cards/generate', {
+    method: 'POST',
+    data,
+  })
+}
+
+//查看文章详情
+export async function queryCardDownLoad() {
+  return request(`/api/admin/cards/download`, {
+    method: 'GET',
+  })
+}
+
+//查看文章详情
+export async function queryCardSituation() {
+  return request(`/api/admin/cards/cardSituation`, {
+    method: 'GET',
+  })
+}

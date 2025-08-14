@@ -58,10 +58,11 @@ request.interceptors.request.use((url, options) => {
 
 // 响应拦截器
 request.interceptors.response.use(async (response) => {
-  const data = await response.clone().json()
-  if (data?.code !== 0 && data?.msg) {
-    message.error(data.msg)
-  }
+  // console.log('123', response);
+  // const data = await response.clone().json()
+  // if (data?.code !== 0 && data?.msg) {
+  //   message.error(data.msg)
+  // }
   return response
 })
 
