@@ -16,13 +16,13 @@ export default defineConfig({
       component: './Login',
       layout: false,
     },
-    {
-      path: '/',
-      redirect: '/home',
-    },
+    // {
+    //   path: '/',
+    //   redirect: '/home',
+    // },
     {
       name: '工作台',
-      path: '/home',
+      path: '',
       component: './Home',
     },
     {
@@ -31,9 +31,25 @@ export default defineConfig({
       component: './MemberPrice',
     },
     {
-      name: '卡注册',
+      name: '卡管理',
       path: '/card',
-      component: './Card',
+      routes: [
+        {
+          name: '发行卡',
+          path: 'card/create',
+          component: './Card/create',
+        },
+        {
+          name: '发行记录',
+          path: 'card/record',
+          component: './Card/record',
+        },
+        {
+          name: '卡列表',
+          path: 'card/list',
+          component: './Card/list',
+        },
+      ],
     },
     {
       name: '用户管理',

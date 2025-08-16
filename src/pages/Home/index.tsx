@@ -22,6 +22,8 @@ import {
   Button
 } from 'antd';
 import ChartLine from '@/components/Chart';
+import ChartLines from '@/components/Charts';
+import OperationChart, { ChartData } from '@/components/OperationChart';
 import styles from './index.less';
 
 interface basicInfoProps {
@@ -101,47 +103,6 @@ const HomePage: React.FC = () => {
     }
   }, [incomeType]);
 
-  useEffect(()=>{
-    if (incomeList) {
-      const chart = new Chart({
-        container: 'income',
-        autoFit: true,
-        height: 270,
-      });
-      
-      chart
-        .data(incomeList)
-        .encode('x', 'date')
-        .encode('y', 'visits')
-        // .encode('color', 'city')
-        .scale('x', {
-          range: [0, 1],
-        })
-        .scale('y', {
-          nice: true,
-        })
-        .axis('y', { labelFormatter: (d:any) => d + '人数' });
-
-      chart.options({
-        tooltip: {
-          items: [
-            {name: '张三', channel: ''},
-            {name: '李四', channel: ''},
-          ],
-        },
-      })
-      
-      chart.line().encode('shape', 'smooth');
-      
-      chart.point().encode('shape', 'point')
-      
-      chart.render();
-      return () => {
-        chart.destroy();
-      };
-    }
-  }, [incomeList]); 
-
   const onLoadOperations = () => {
     queryOperations()
       .then((res) => {
@@ -154,8 +115,8 @@ const HomePage: React.FC = () => {
       .then((res) => {
         if (res) {
           res = res.map((item:any)=>{
-            item.visits = item.currentValue;
-            item.yoy = item.compareValue;
+            item.name = item.date;
+            item.value = item.compareValue;
             return item;
           })
           setOperationsList(res);
@@ -168,8 +129,8 @@ const HomePage: React.FC = () => {
       .then((res) => {
         if (res) {
           res = res.map((item:any)=>{
-            item.visits = item.currentValue;
-            item.yoy = item.compareValue;
+            item.name = item.date;
+            item.value = item.compareValue;
             return item;
           })
           setOperationsList(res);
@@ -182,8 +143,8 @@ const HomePage: React.FC = () => {
       .then((res) => {
         if(res) {
           res = res.map((item:any)=>{
-            item.visits = item.currentValue;
-            item.yoy = item.compareValue;
+            item.name = item.date;
+            item.value = item.compareValue;
             return item;
           })
           setRigisterList(res);
@@ -196,8 +157,8 @@ const HomePage: React.FC = () => {
       .then((res) => {
         if(res) {
           res = res.map((item:any)=>{
-            item.visits = item.currentValue;
-            item.yoy = item.compareValue;
+            item.name = item.date;
+            item.value = item.compareValue;
             return item;
           })
           setRigisterList(res);
@@ -210,8 +171,8 @@ const HomePage: React.FC = () => {
       .then((res) => {
         if(res) {
           res = res.map((item:any)=>{
-            item.visits = item.currentValue;
-            item.yoy = item.compareValue;
+            item.name = item.date;
+            item.value = item.compareValue;
             return item;
           })
           setVipsList(res);
@@ -224,8 +185,8 @@ const HomePage: React.FC = () => {
       .then((res) => {
         if(res) {
           res = res.map((item:any)=>{
-            item.visits = item.currentValue;
-            item.yoy = item.compareValue;
+            item.name = item.date;
+            item.value = item.compareValue;
             return item;
           })
           setVipsList(res);
@@ -237,6 +198,12 @@ const HomePage: React.FC = () => {
     queryOperationsMonthIncome()
       .then((res) => {
         if (res) {
+          console.log('res', res);
+          res = res.map((item:any)=>{
+            item.name = item.date;
+            item.value = item.compareValue;
+            return item;
+          })
           setIncomeList(res);
         }
       });
@@ -250,6 +217,10 @@ const HomePage: React.FC = () => {
         }
       });
   }
+
+  const handleChartClick = (params: any) => {
+    console.log('图表点击事件:', params);
+  };
 
   return (
     <PageContainer ghost>
@@ -312,9 +283,15 @@ const HomePage: React.FC = () => {
                   </Button>
                 </Flex>
               </Flex>
-              <ChartLine 
-                id={'visit-chart'}
+              <OperationChart
+                type="line"
                 data={operationsList}
+                title=""
+                subtitle=""
+                height={300}
+                xAxisLabel="日期"
+                yAxisLabel="访问数"
+                onChartClick={handleChartClick}
               />
             </Card>
           </Col>
@@ -378,9 +355,15 @@ const HomePage: React.FC = () => {
                   </Button>
                 </Flex>
               </Flex>
-              <ChartLine
-                id={'rigister-chart'}
+              <OperationChart
+                type="line"
                 data={types == 'register' ? rigisterList : vipsList}
+                title=""
+                subtitle=""
+                height={300}
+                xAxisLabel="日期"
+                yAxisLabel="访问数"
+                onChartClick={handleChartClick}
               />
             </Card>
           </Col>
@@ -441,7 +424,16 @@ const HomePage: React.FC = () => {
               </Button>
             </Flex>
           </Flex>
-          <div id='income'></div>
+          <OperationChart
+            type="line"
+            data={incomeList}
+            title=""
+            subtitle=""
+            height={300}
+            xAxisLabel="日期"
+            yAxisLabel="钱"
+            onChartClick={handleChartClick}
+          />
         </Card>
       </Space>
     </PageContainer>

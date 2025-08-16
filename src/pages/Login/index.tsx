@@ -20,7 +20,7 @@ const Login = () => {
       localStorage.setItem('token', res.token);
       localStorage.setItem('user', JSON.stringify(res));
       queryUserInfo().then(res => {
-        history.push('/home')
+        history.push('/')
       })
     })
   };

@@ -18,29 +18,19 @@ const ChartLine = (props:ChartLineProps) => {
     chart
       .data(props.data)
       .encode('x', 'date')
-      .encode('y', 'visits')
+      .encode('y', 'value')
+      .encode('series', () => '访问量')
       // .encode('color', 'city')
       .scale('x', {
         range: [0, 1],
       })
       .scale('y', {
+        domain: [0, 10],
         nice: true,
       })
       .axis('y', { labelFormatter: (d:any) => d + '人数' });
-
-    chart.options({
-      tooltip: {
-        items: [
-          {name: '张三', channel: ''},
-          {name: '李四', channel: ''},
-        ],
-      },
-    })
-    
     chart.line().encode('shape', 'smooth');
-    
-    chart.point().encode('shape', 'point')
-    
+    chart.point().encode('shape', 'point');
     chart.render();
     return () => {
       chart.destroy();
