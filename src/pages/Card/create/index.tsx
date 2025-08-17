@@ -6,14 +6,14 @@ import {
   Flex,
   Space,
   InputNumber,
-  Card
+  Card,
+  Progress,
+  message
 } from 'antd';
 import React, { useState, useEffect } from 'react';
 import {
-  queryProductList,
-  queryVipInfo,
-  updatePorduct,
-  updateInfoByVipLevel
+  queryCardSituation,
+  queryCardGenerate
 } from '@/services/api';
 import type { InputNumberProps } from 'antd';
 
@@ -22,8 +22,14 @@ const { TextArea } = Input;
 
 const CardPage: React.FC = () => {
 
-  const onChange: InputNumberProps['onChange'] = (value) => {
+  const [info, setInfo] = useState<any>({});
+  const [remark, setRemark] = useState<string>('');
+
+  const onChange = (key: string, value: number) => {
     console.log('changed', value);
+    let data = {...info};
+    data[key] = value;
+    setInfo(data);
   };
 
   useEffect(()=>{
@@ -31,13 +37,25 @@ const CardPage: React.FC = () => {
   }, []);
 
   const onLoadData = () => {
-    queryProductList()
+    queryCardSituation()
       .then(res=>{
         console.log('res', res);
+        setInfo(res);
       })
-    queryVipInfo()
+  }
+
+  const onSure = () => {
+    let params = {
+      startNumber: Number(info.min),
+      endNumber: Number(info.max),
+      remark: remark
+    }
+    queryCardGenerate(params)
       .then(res=>{
-        console.log('res', res);
+        if (res.code === 200) {
+          message.success('修改成功');
+          onLoadData();
+        }
       })
   }
 
@@ -51,40 +69,42 @@ const CardPage: React.FC = () => {
       <Card>
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
           <div></div>
+          <Progress percent={info?.haveCreate / (info.haveCreate + info.haveNotCreate)} showInfo={false} />
           <Flex justify={'space-between'} align={'center'}>
-            <p>1000</p>
-            <p>2000</p>
+            <p>{info.min}</p>
+            <p>{info.max}</p>
           </Flex>
           <Flex justify={'flex-start'} align={'center'} gap={10}>
-            <div>已发行 120</div>
-            <div>未发行 120</div>
+            <div>已发行 {info?.haveCreate}</div>
+            <div>未发行 {info?.haveNotCreate}</div>
           </Flex>
           <Flex justify={'flex-start'} align={'center'} gap={10}>
             起止卡号
             &nbsp;&nbsp;&nbsp;
             <InputNumber
-              min={1}
-              max={10}
-              defaultValue={3}
-              onChange={onChange}
+              min={info.min}
+              max={info.max}
+              value={info.min}
+              onInput={(e:any)=>{onChange('min', e)}}
+              style={{width: '150px'}}
             />
             &nbsp;&nbsp;&nbsp;
             -
             &nbsp;&nbsp;&nbsp;
             <InputNumber
-              min={1}
-              max={10}
-              defaultValue={3}
-              onChange={onChange}
+              min={info.max}
+              max={info.max}
+              value={info.max}
+              onInput={(e:any)=>{onChange('max', e)}}
+              style={{width: '150px'}}
             />
             &nbsp;&nbsp;&nbsp;
             共
             &nbsp;&nbsp;&nbsp;
-            <InputNumber
-              min={1}
-              max={10}
-              defaultValue={3}
-              onChange={onChange}
+            <Input
+              value={info.max - info.min + 1}
+              readOnly
+              style={{width: '150px'}}
             />
             &nbsp;&nbsp;&nbsp;
             张
@@ -93,18 +113,21 @@ const CardPage: React.FC = () => {
             &nbsp;&nbsp;&nbsp;
             未发行卡段: 
             <Flex justify={'space-between'} align={'center'}>
-              1000-20000
-              <span>2000张</span>
+              {info.nextCard}-{info.endCard}
             </Flex>
           </Flex>
           备注说明:
           <TextArea
             rows={4}
             placeholder="请输入内容"
-            maxLength={6}
+            maxLength={-1}
             style={{ width: '50%' }}
+            value={remark}
+            onInput={(e:any)=>{
+              setRemark(e.target.value);
+            }}
           />
-          <Button type='primary'>确认发行</Button>
+          <Button type='primary' onClick={()=>{onSure()}}>确认发行</Button>
         </Space>
       </Card>
     </PageContainer>

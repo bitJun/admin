@@ -24,7 +24,7 @@ const columns: TableColumnsType= [
   { title: '充值时间', dataIndex: 'createdTime', render: (text, record, index) => record.order.createTime },
   { title: '充值金额(元)', dataIndex: 'address', render: (text, record, index) => <span>{record.order.amount}元</span> },
   { title: '有效期', dataIndex: 'address', render: (text, record, index) => record.order.durationTime },
-  { title: '充值类型', dataIndex: 'address' },
+  { title: '充值类型', dataIndex: 'address', render: (text, record, index) => record.orderType },
 ];
 
 const FinancePage = () => {

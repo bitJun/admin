@@ -11,6 +11,7 @@ import {
   Card
 } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
+import dayjs from 'dayjs';
 import {
   queryCardOrder
 } from '@/services/api';
@@ -25,11 +26,11 @@ const columns: TableColumnsType<any> = [
   { title: '卡类别', dataIndex: 'id' },
   { title: '卡号区间', dataIndex: 'range', render: (text, record, index) => `${record.rangeStart} - ${record.rangeEnd}`},
   { title: '发行张数', dataIndex: 'createNum' },
-  { title: '发行费用', dataIndex: 'register_time' },
-  { title: '发行人', dataIndex: 'examination_year' },
-  { title: '发行时间', dataIndex: 'high_school_subject' },
-  { title: '备注', dataIndex: 'province' },
-  { title: '操作', dataIndex: 'score' }
+  // { title: '发行费用', dataIndex: 'register_time' },
+  { title: '发行人', dataIndex: 'createdUser' },
+  { title: '发行时间', dataIndex: 'createdTime' },
+  { title: '备注', dataIndex: 'remark' },
+  // { title: '操作', dataIndex: 'score' }
 ];
 
 const dataSource = Array.from<any>({ length: 46 }).map<any>((_, i) => ({
@@ -49,20 +50,22 @@ const MemberList = () => {
   const pageSize = useRef(10);
   const [list, setList] = useState([]);
   const examinationYear = useRef('');
+  const [range, setRange] = useState<any>([dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format('YYYY-MM-DD')]);
   const [total, setTotal] = useState(0);
 
   useEffect(()=>{
     onLoadList();
-  }, []);
+  }, [range]);
 
   const onLoadList = () => {
     let params = {
       keyword: keyword,
-      startCreateTime: '',
-      endCreateTime: '',
+      startCreateTime: `${range[0]} 00:00:00`,
+      endCreateTime: `${range[1]} 23:59:59`,
       page_id: pageIndex.current,
       page_size: pageSize.current,
     }
+    console.log(range)
     queryCardOrder(params)
       .then(res=>{
         console.log('res', res);
@@ -112,7 +115,7 @@ const MemberList = () => {
           <Flex justify={'space-between'} align={'center'}>
             {/* <Button type="primary">Primary</Button> */}
             <Search
-              placeholder="来源标识/学生/家长/老师/手机号/卡号"
+              placeholder="请输入备注/卡号"
               onSearch={onSearch}
               onChange={e=>setKeyword(e.target.value)}
               style={{
@@ -120,87 +123,19 @@ const MemberList = () => {
               }}
               enterButton="搜索"
             />
-            <Flex justify={'flex-start'} align={'center'} gap={10}>
+            {/* <Flex justify={'flex-start'} align={'center'} gap={10}>
               <Button type="primary">导出Excel</Button>
-            </Flex>
+            </Flex> */}
           </Flex>
           <Flex justify={'flex-start'} align={'center'} gap={10}>
-            <Select
-              defaultValue="高考年份"
-              style={{ width: 120 }}
-              value={examinationYear.current}
-              onChange={(value)=>{
-                console.log('value', value)
-                examinationYear.current = value;
-                pageIndex.current = 1;
-                onLoadList();
-              }}
-              options={[
-                { value: '2021', label: '2021' },
-                { value: '2022', label: '2022' },
-                { value: '2023', label: '2023' },
-                { value: '2024', label: '2024' },
-                { value: '2025', label: '2025' },
-                { value: '2026', label: '2026' },
-              ]}
+            <RangePicker
+              format="YYYY-MM-DD"
+              value={[dayjs(range[0]), dayjs(range[1])]}
+              // defaultValue={range}
+              onChange={(value:any)=>{setRange([value[0].format('YYYY-MM-DD'), value[1].format('YYYY-MM-DD')])}}
             />
-            <Select
-              defaultValue="lucy"
-              style={{ width: 120 }}
-              onChange={handleChange}
-              options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
-              ]}
-            />
-            <Select
-              defaultValue="lucy"
-              style={{ width: 120 }}
-              onChange={handleChange}
-              options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
-              ]}
-            />
-            <Select
-              defaultValue="lucy"
-              style={{ width: 120 }}
-              onChange={handleChange}
-              options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
-              ]}
-            />
-            <Select
-              defaultValue="lucy"
-              style={{ width: 120 }}
-              onChange={handleChange}
-              options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
-              ]}
-            />
-            <RangePicker />
-            成绩:
-            <Input style={{ width: 120 }} />
-            -
-            <Input style={{ width: 120 }} />
-            <Button
-              type="primary"
-            >
-              筛选
-            </Button>
           </Flex>
           <Table<any>
-            rowSelection={rowSelection}
             columns={columns}
             dataSource={list}
             pagination={{

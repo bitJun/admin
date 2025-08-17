@@ -291,13 +291,6 @@ export async function queryProductList(params?: any) {
   })
 }
 
-//查询当前所有商品
-export async function queryVipInfo(params?: any) {
-  return request(`/api/admin/vip/info`, {
-    method: 'GET',
-    params,
-  })
-}
 
 //修改会员卡价格
 export async function updatePorduct(data: any) {
@@ -478,3 +471,11 @@ export async function queryCardSituation() {
     method: 'GET',
   })
 }
+
+//查看文章详情
+export async function queryVipInfo() {
+  return request(`/api/admin/vip/info`, {
+    method: 'GET',
+  })
+}
+

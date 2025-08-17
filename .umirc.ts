@@ -104,14 +104,14 @@ export default defineConfig({
   npmClient: 'pnpm',
   proxy: {
     '/api': {
-      target: 'https://youjia-admin.529603395.xyz',
+      target: 'https://admin.529603395.xyz',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      pathRewrite: { '^/': '' },
     },
     '/dev-api': {
       target: 'https://youjia.529603395.xyz',
       changeOrigin: true,
-      pathRewrite: { '^/dev-api': '' },
+      pathRewrite: { '^/': '' },
     }
   },
 });
