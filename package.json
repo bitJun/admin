@@ -18,10 +18,13 @@
     "@ant-design/pro-components": "^2.4.4",
     "@antv/g2": "^5.3.3",
     "@umijs/max": "^4.4.11",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-react": "^1.0.6",
     "antd": "^5.4.0",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.13",
     "echarts": "^6.0.0",
+    "echarts-for-react": "^3.0.2",
     "umi-request": "^1.4.0",
     "zustand": "^5.0.5"
   },

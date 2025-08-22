@@ -82,6 +82,12 @@ export default defineConfig({
           path: '/article/army',
           component: './Article/army',
         },
+        {
+          name: '新建文章',
+          path: '/article/detail',
+          component: './Article/detail',
+          hideInMenu: true
+        }
       ],
     },
     {

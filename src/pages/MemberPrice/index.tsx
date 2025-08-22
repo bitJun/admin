@@ -25,47 +25,29 @@ interface CardItemProps {
 
 const AccessPage: React.FC = () => {
   
-  const [listInfo, setListInfo] = useState<any>({});
-  const [info, setInfo] = useState<Array<any> | []>([]);
+  const [listInfo, setListInfo] = useState<any>([]);
 
   useEffect(()=>{
-    onLoadInfo();
     onLoadList();
   }, []);
 
   const onLoadList = () => {
     queryProductList({})
       .then((res) => {
-        console.log(res);
-        let data:any = {};
-        res.data.forEach((item:any)=>{
-          data[item.productId] = item;
-        })
-        setListInfo(data);
+        setListInfo(res.data);
       })
   }
 
-  const onLoadInfo = () => {
-    queryVipInfo({})
-      .then((res) => {
-        setInfo(res.data);
-        console.log(res);
-      })
-  }
+  const onSave = (id:any, productPrice: any) => {
 
-  const onSave = (id:any) => {
-    let data:any = {};
-    data = listInfo[id];
-    console.log('data', data)
     let json:any = {};
-    json.productId  = data.productId;
-    json.price = Number(data.productPrice);
+    json.productId  = id;
+    json.price = Number(productPrice);
     updatePorduct(json)
       .then(res=>{
-        onLoadInfo();
         onLoadList();
       })
-    // console.log('json', json)
+    console.log('json', json)
   }
 
   return (
@@ -79,25 +61,31 @@ const AccessPage: React.FC = () => {
         <div style={{width: '700px'}}>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             {
-              info.map((item:any)=>{
+              listInfo.map((item:any)=>{
                 return (
-                  <div key={item.id}>
-                    <p style={{marginBottom: 0}}>{item.vipName}</p>
+                  <div key={item.productPrice}>
+                    <p style={{marginBottom: 0}}>{item.productName}</p>
                     <Flex justify={'flex-start'} align={'center'}>
-                      设置月卡价格：
+                      设置{item.productName}价格：
                       &nbsp;&nbsp;&nbsp;
                       <Input
                         prefix="￥"
                         suffix="元"
                         style={{width: '400px'}}
-                        value={listInfo[item.id]?.productPrice}
-                        onInput={(e)=>{
-                          listInfo[item.id].productPrice = e.target.value;
-                          setListInfo({...listInfo});
+                        value={item?.productPrice}
+                        onChange={(e:any)=>{
+                          let data = [...listInfo];
+                          data = data.map((json:any)=>{
+                            if (json.productId == item.productId) {
+                              json.productPrice = e.target.value;
+                            }
+                            return json;
+                          });
+                          setListInfo(data);
                         }}
                       />
                       &nbsp;&nbsp;&nbsp;
-                      <Button type='primary' onClick={()=>{onSave(item.id)}}>保存设置</Button>
+                      <Button type='primary' onClick={()=>{onSave(item.productId, item.productPrice)}}>保存设置</Button>
                     </Flex>
                   </div>
                 )

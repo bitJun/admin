@@ -1,5 +1,6 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, useAccess } from '@umijs/max';
+import {history} from 'umi';
 import {
   Button,
   Card,
@@ -176,50 +177,62 @@ const AccessPage: React.FC = () => {
   }
 
   const onAdd = () => {
-    setType('add');
-    setTitle('新增文章');
-    setShow(true);
+    
+    history.push({
+      pathname: '/article/detail',
+      search: '?type=add'
+    });
+    // setType('add');
+    // setTitle('新增文章');
+    // setShow(true);
   }
 
   const onDetail = (id: number) => {
-    queryArticlesById(id)
-      .then(res=>{
-        let json = {...res.data};
-        if (json.tags) {
-          let ids:any = [];
-          json.tags.forEach((item:any)=>{
-            ids.push(item.id);
-          })
-          json.tagIds = ids;
-        }
-        setArticle(json);
-        setType('detail');
-        setTitle('文章详情');
-        setShow(true);
-      });
+    history.push({
+      pathname: '/article/detail',
+      search: `?type=detail&id=${id}`
+    });
+    // queryArticlesById(id)
+    //   .then(res=>{
+    //     let json = {...res.data};
+    //     if (json.tags) {
+    //       let ids:any = [];
+    //       json.tags.forEach((item:any)=>{
+    //         ids.push(item.id);
+    //       })
+    //       json.tagIds = ids;
+    //     }
+    //     setArticle(json);
+    //     setType('detail');
+    //     setTitle('文章详情');
+    //     setShow(true);
+    //   });
   }
 
   const onEdit = (id: number) => {
-    queryArticlesById(id)
-      .then(res=>{
-        console.log('res', res.data)
-        let json = {...res.data};
-        if (json.tags) {
-          let ids:any = [];
-          json.tags.forEach((item:any)=>{
-            ids.push(item.id);
-          })
-          json.tagIds = ids;
-        }
-        setArticle(json);
-        setType('edit');
-        setTitle('编辑文章');
-        setShow(true);
-      });
+    history.push({
+      pathname: '/article/detail',
+      search: `?type=edit&id=${id}`
+    });
+    // queryArticlesById(id)
+    //   .then(res=>{
+    //     console.log('res', res.data)
+    //     let json = {...res.data};
+    //     if (json.tags) {
+    //       let ids:any = [];
+    //       json.tags.forEach((item:any)=>{
+    //         ids.push(item.id);
+    //       })
+    //       json.tagIds = ids;
+    //     }
+    //     setArticle(json);
+    //     setType('edit');
+    //     setTitle('编辑文章');
+    //     setShow(true);
+    //   });
   }
 
   useEffect(()=>{
-    console.log('range', range)
     if (range && range.length > 0) {
       downTime.current = dayjs(range[0]).format('YYYY-MM-DD HH:mm:ss');
       upTime.current = dayjs(range[1]).format('YYYY-MM-DD HH:mm:ss');
@@ -237,7 +250,7 @@ const AccessPage: React.FC = () => {
     <PageContainer
       ghost
       header={{
-        title: '权限示例',
+        title: '升学规划',
       }}
     >
       <Card>
@@ -291,7 +304,7 @@ const AccessPage: React.FC = () => {
         <Row gutter={16}>
           {
             list.map((item:any)=>
-              <Col span={8} style={{marginBottom: '20px'}}>
+              <Col span={8} style={{marginBottom: '20px'}} key={item.id}>
                 <Card>
                   <div className={styles.flexBox}>
                     <img
