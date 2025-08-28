@@ -102,6 +102,7 @@ const CardPage: React.FC = () => {
               onInput={(e:any)=>{setEndNumber(e)}}
               style={{width: '150px'}}
               controls={false}
+              precision={0}
             />
             &nbsp;&nbsp;&nbsp;
             共

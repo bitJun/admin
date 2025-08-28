@@ -15,7 +15,8 @@ import {
   Flex,
   Tag,
   Upload,
-  InputNumber
+  InputNumber,
+  DatePicker
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -27,7 +28,9 @@ import {
   queryArticlesById,
   postUpload
 } from '@/services/api';
-import '@wangeditor/editor/dist/css/style.css'
+import '@wangeditor/editor/dist/css/style.css';
+import MarkdownEditor from '@uiw/react-markdown-editor';
+import ReactMarkdown from 'react-markdown';
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 
 const { TextArea } = Input;
@@ -42,7 +45,7 @@ const ArticleDetail: React.FC = () => {
   const [article, setArticle] = useState({
     title: '',
     author: '',
-    publishTime: '',
+    publishTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     coverImage: '',
     content: '',
     category: '',
@@ -50,6 +53,8 @@ const ArticleDetail: React.FC = () => {
     id: undefined,
     readCount: 0
   });
+  const [markdown, setMarkdown] = useState('');
+  const [publishTime, setPublishTime] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'));
   const [form] = Form.useForm();
   const [editor, setEditor] = useState<any>(null);
   const [imageUrl, setImageUrl] = useState<string>();
@@ -163,7 +168,8 @@ const ArticleDetail: React.FC = () => {
     } else {
       params.coverImage = '';
     }
-    params.content = article.content;
+    params.content = markdown;
+    params.publishTime = publishTime;
     params.category = searchParams.get('category') || '';
     if (id) {
       params.id = id;
@@ -173,7 +179,6 @@ const ArticleDetail: React.FC = () => {
           history.back();
         })
     } else {
-      params.publishTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
       addArticles(params)
         .then(res=>{
           message.success('新增成功');
@@ -196,10 +201,11 @@ const ArticleDetail: React.FC = () => {
         if (json.coverImage) {
           setImageUrl(json.coverImage);
         }
-        form.setFieldsValue(json);
-        console.log(json)
+        setMarkdown(res.content);
+        setPublishTime(res.publishTime);
         setArticle(json);
         setTitle('文章详情');
+        form.setFieldsValue(json);
       });
   }
 
@@ -221,6 +227,7 @@ const ArticleDetail: React.FC = () => {
           <Col span={12}>
             <Form
               form={form}
+              labelCol={{ span: 6 }}
               initialValues={article} 
               onValuesChange={(val)=>{
                 setArticle({
@@ -257,20 +264,22 @@ const ArticleDetail: React.FC = () => {
                     value={article.readCount}
                     placeholder='请输入阅读量'
                     disabled={type === 'detail'}
+                    precision={0}
                     style={{
                       width: '100%'
                     }}
                   />
               </Form.Item>
-              <Form.Item
-                  label='作者'
-                  name='author'
-              >
-                  <Input 
-                    value={article.author}
-                    placeholder='请输入作者'
-                    disabled={type === 'detail'}
-                  />
+              <Form.Item label="创建时间" >
+                <DatePicker
+                  showTime
+                  value={dayjs(publishTime)}
+                  format="YYYY-MM-DD HH:mm:ss"
+                  onChange={(val:any)=>{
+                    console.log('val',dayjs(val).format('YYYY-MM-DD HH:mm:ss'))
+                    setPublishTime(dayjs(val).format('YYYY-MM-DD HH:mm:ss'));
+                  }}
+                />
               </Form.Item>
               <Form.Item
                 label="图片"
@@ -291,7 +300,7 @@ const ArticleDetail: React.FC = () => {
                 label='内容'
                 name='content'
               >
-                <div style={{ border: '1px solid #ccc', zIndex: 100 }}>
+                {/* <div style={{ border: '1px solid #ccc', zIndex: 100 }}>
                   <Toolbar
                     editor={editor}
                     defaultConfig={toolbarConfig}
@@ -308,7 +317,12 @@ const ArticleDetail: React.FC = () => {
                     mode="default"
                     style={{ height: '300px', overflowY: 'hidden' }}
                   />
-                </div>
+                </div> */}
+                <MarkdownEditor
+                  value={markdown}
+                  onChange={(value) => setMarkdown(value)}
+                  height="400px"
+                />
               </Form.Item>
               <Form.Item
                 label='标签'
@@ -333,11 +347,13 @@ const ArticleDetail: React.FC = () => {
               </Form.Item>
               {
                 type != 'detail' &&
-                <Form.Item>
-                  <Button type='primary' onClick={onSubmit}>确定</Button>
-                  <Button type='primary' onClick={()=>{
-                    history.back();
-                  }}>返回</Button>
+                <Form.Item label='' wrapperCol={{ offset: 6, span: 18 }}>
+                  <Flex gap={'20px'}>
+                    <Button type='primary' onClick={onSubmit}>确定</Button>
+                    <Button color="primary" variant="outlined" onClick={()=>{
+                      history.back();
+                    }}>返回</Button>
+                  </Flex>
                 </Form.Item>
               }
             </Form>
@@ -347,6 +363,10 @@ const ArticleDetail: React.FC = () => {
             <div>
               <h4>{article.title}</h4>
               <p>作者:&nbsp;&nbsp;{article.author}</p>
+              <Flex justify='space-between'>
+                <p>创建时间:&nbsp;&nbsp;{article.publishTime}</p>
+                <p>阅读量:&nbsp;&nbsp;{article.readCount}</p>
+              </Flex>
               {
                 imageUrl ? (
                   <img
@@ -367,7 +387,8 @@ const ArticleDetail: React.FC = () => {
                   )
                 }
               </Flex>
-              <div dangerouslySetInnerHTML={{__html: article.content}}></div>
+              {/* <div dangerouslySetInnerHTML={{__html: markdown}}></div> */}
+              <ReactMarkdown>{markdown}</ReactMarkdown>
             </div>
           </Col>
         </Row>
