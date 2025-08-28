@@ -66,11 +66,11 @@ const AccessPage: React.FC = () => {
   }, []);
 
   useEffect(()=>{
-    if (category) {
+    if (id) {
       pageIndex.current = 1;
       onLoadList();
     }
-  }, [category]);
+  }, [id]);
 
   const onLoadTag = () => {
     queryArticlesTags()
@@ -90,12 +90,12 @@ const AccessPage: React.FC = () => {
     let params = {
       pageIndex: pageIndex.current,
       pageSize: pageSize.current,
-      category: category,
+      category: '军旅规划',
       orderBy: 'publishTime',
       orderDirection: 'DESC',
       groupBy: '',
       keyword: '',
-      tagIds: [],
+      tagIds: id ? [id] : [],
       downTime: downTime.current,
       upTime: upTime.current,
       offset: 0
@@ -176,7 +176,7 @@ const AccessPage: React.FC = () => {
   const onAdd = () => {
     history.push({
       pathname: '/article/detail',
-      search: '?type=add'
+      search: '?type=add&category=军旅规划&key=military'
     });
     // setType('add');
     // setTitle('新增文章');
@@ -186,7 +186,7 @@ const AccessPage: React.FC = () => {
   const onDetail = (id: number) => {
     history.push({
       pathname: '/article/detail',
-      search: `?type=detail&id=${id}`
+      search: `?type=detail&id=${id}&category=军旅规划&key=military`
     });
     // queryArticlesById(id)
     //   .then(res=>{
@@ -208,7 +208,7 @@ const AccessPage: React.FC = () => {
   const onEdit = (id: number) => {
     history.push({
       pathname: '/article/detail',
-      search: `?type=edit&id=${id}`
+      search: `?type=edit&id=${id}&category=军旅规划&key=military`
     });
     // queryArticlesById(id)
     //   .then(res=>{
@@ -261,7 +261,7 @@ const AccessPage: React.FC = () => {
               tags.map((item:any)=>
                 <div
                   onClick={()=>{
-                    setCategory(item.category);
+                    // setCategory(item.category);
                     setId(item.id)
                   }}
                   className={`${styles.tag} ${item.id === id ? `${styles.active}` : ''}`}
@@ -322,12 +322,12 @@ const AccessPage: React.FC = () => {
                   </div>
                   <Flex justify='space-between'>
                     <Popconfirm
-                      title="Delete the task"
-                      description="Are you sure to delete this task?"
+                      title="提示"
+                      description="确定删除吗？"
                       onConfirm={()=>{onDel(item.id)}}
                       onCancel={cancel}
-                      okText="Yes"
-                      cancelText="No"
+                      okText="确定"
+                      cancelText="取消"
                     >
                       <Button danger>删除</Button>
                     </Popconfirm>

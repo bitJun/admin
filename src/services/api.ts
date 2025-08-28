@@ -479,3 +479,39 @@ export async function queryVipInfo() {
   })
 }
 
+//分页查询文章
+export async function postUpload(data: any) {
+  return request('/api/storage/upload', {
+    method: 'POST',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  })
+}
+
+
+
+//分页查询文章
+export async function queryActivityList(data: any) {
+  return request('/api/api/articles/eventQuery', {
+    method: 'POST',
+    data,
+  })
+}
+
+//修改文章
+export async function updateActivity(data: any) {
+  return request('/api/api/articles/eventEdit', {
+    method: 'POST',
+    data,
+  })
+}
+
+//新增文章
+export async function addActivity(data: any) {
+  return request('/api/api/articles/eventCreate', {
+    method: 'POST',
+    data,
+  })
+}

@@ -24,6 +24,8 @@ const CardPage: React.FC = () => {
 
   const [info, setInfo] = useState<any>({});
   const [remark, setRemark] = useState<string>('');
+  const [percent, setPercent] = useState(0);
+  const [endNumber, setEndNumber] = useState(0);
 
   const onChange = (key: string, value: number) => {
     console.log('changed', value);
@@ -39,20 +41,24 @@ const CardPage: React.FC = () => {
   const onLoadData = () => {
     queryCardSituation()
       .then(res=>{
-        console.log('res', res);
+        let total = res.haveCreate + res.haveNotCreate;
+        let p = res.haveCreate / total * 100;
+        setPercent(p);
         setInfo(res);
+        setEndNumber(Number(res.nextCard) + 1)
       })
   }
 
   const onSure = () => {
     let params = {
-      startNumber: Number(info.min),
-      endNumber: Number(info.max),
+      startNumber: Number(info.nextCard),
+      endNumber: Number(endNumber),
       remark: remark
     }
     queryCardGenerate(params)
       .then(res=>{
-        if (res.code === 200) {
+        console.log(res)
+        if (res.success) {
           message.success('修改成功');
           onLoadData();
         }
@@ -69,7 +75,7 @@ const CardPage: React.FC = () => {
       <Card>
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
           <div></div>
-          <Progress percent={info?.haveCreate / (info.haveCreate + info.haveNotCreate)} showInfo={false} />
+          <Progress percent={percent} showInfo={false} />
           <Flex justify={'space-between'} align={'center'}>
             <p>{info.min}</p>
             <p>{info.max}</p>
@@ -82,27 +88,26 @@ const CardPage: React.FC = () => {
             起止卡号
             &nbsp;&nbsp;&nbsp;
             <InputNumber
-              min={info.min}
-              max={info.max}
-              value={info.min}
-              onInput={(e:any)=>{onChange('min', e)}}
+              disabled
+              value={info.nextCard}
               style={{width: '150px'}}
             />
             &nbsp;&nbsp;&nbsp;
             -
             &nbsp;&nbsp;&nbsp;
             <InputNumber
-              min={info.max}
-              max={info.max}
-              value={info.max}
-              onInput={(e:any)=>{onChange('max', e)}}
+              min={Number(info.nextCard) + 1}
+              max={Number(info.max)}
+              value={endNumber}
+              onInput={(e:any)=>{setEndNumber(e)}}
               style={{width: '150px'}}
+              controls={false}
             />
             &nbsp;&nbsp;&nbsp;
             共
             &nbsp;&nbsp;&nbsp;
             <Input
-              value={info.max - info.min + 1}
+              value={Number(endNumber) - Number(info.nextCard) - 1}
               readOnly
               style={{width: '150px'}}
             />

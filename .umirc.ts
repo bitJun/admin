@@ -7,7 +7,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: '高考后台',
+    title: '优珈教育',
     locale: false,
   },
   routes: [
@@ -16,10 +16,6 @@ export default defineConfig({
       component: './Login',
       layout: false,
     },
-    // {
-    //   path: '/',
-    //   redirect: '/home',
-    // },
     {
       name: '工作台',
       path: '',
@@ -100,9 +96,15 @@ export default defineConfig({
       path: '/activity',
       routes: [
         {
-          name: '新建活动',
-          path: '/activity/add',
-          component: './Activity',
+          name: '活动列表',
+          path: '/activity/list',
+          component: './Activity/list',
+        },
+        {
+          name: '新建文章',
+          path: '/activity/detail',
+          component: './Activity/detail',
+          hideInMenu: true
         }
       ]
     },

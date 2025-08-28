@@ -66,16 +66,15 @@ const AccessPage: React.FC = () => {
   }, []);
 
   useEffect(()=>{
-    if (category) {
+    if (id) {
       pageIndex.current = 1;
       onLoadList();
     }
-  }, [category]);
+  }, [id]);
 
   const onLoadTag = () => {
     queryArticlesTags()
       .then(res=>{
-        console.log('res', res)
         setTags(res.data.filter((item:any)=>item.category === 'education'));
       });
   }
@@ -93,12 +92,12 @@ const AccessPage: React.FC = () => {
     let params = {
       pageIndex: pageIndex.current,
       pageSize: pageSize.current,
-      category: category,
+      category: '升学规划',
       orderBy: 'publishTime',
       orderDirection: 'DESC',
       groupBy: '',
       keyword: '',
-      tagIds: [],
+      tagIds: id ? [id] : [],
       downTime: downTime.current,
       upTime: upTime.current,
       offset: 0
@@ -155,7 +154,6 @@ const AccessPage: React.FC = () => {
     let params = {
       ...article
     }
-    console.log('params',params)
     params.category = 'education';
     if (params.id) {
       updateArticles(params)
@@ -180,7 +178,7 @@ const AccessPage: React.FC = () => {
     
     history.push({
       pathname: '/article/detail',
-      search: '?type=add'
+      search: '?type=add&category=升学规划&key=education'
     });
     // setType('add');
     // setTitle('新增文章');
@@ -190,7 +188,7 @@ const AccessPage: React.FC = () => {
   const onDetail = (id: number) => {
     history.push({
       pathname: '/article/detail',
-      search: `?type=detail&id=${id}`
+      search: `?type=detail&id=${id}&category=升学规划&key=education`
     });
     // queryArticlesById(id)
     //   .then(res=>{
@@ -212,7 +210,7 @@ const AccessPage: React.FC = () => {
   const onEdit = (id: number) => {
     history.push({
       pathname: '/article/detail',
-      search: `?type=edit&id=${id}`
+      search: `?type=edit&id=${id}&category=升学规划&key=education`
     });
     // queryArticlesById(id)
     //   .then(res=>{
@@ -325,12 +323,12 @@ const AccessPage: React.FC = () => {
                   </div>
                   <Flex justify='space-between'>
                     <Popconfirm
-                      title="Delete the task"
-                      description="Are you sure to delete this task?"
+                      title="提示"
+                      description="确定删除吗？"
                       onConfirm={()=>{onDel(item.id)}}
                       onCancel={cancel}
-                      okText="Yes"
-                      cancelText="No"
+                      okText="确定"
+                      cancelText="取消"
                     >
                       <Button danger>删除</Button>
                     </Popconfirm>

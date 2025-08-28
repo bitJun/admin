@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import {
   Flex,
   Space,
   Button,
   Input,
+  InputNumber,
   Card
 } from 'antd';
 import {
@@ -26,6 +27,7 @@ interface CardItemProps {
 const AccessPage: React.FC = () => {
   
   const [listInfo, setListInfo] = useState<any>([]);
+  const list = useRef<any>([]);
 
   useEffect(()=>{
     onLoadList();
@@ -34,6 +36,7 @@ const AccessPage: React.FC = () => {
   const onLoadList = () => {
     queryProductList({})
       .then((res) => {
+        list.current = res.data;
         setListInfo(res.data);
       })
   }
@@ -47,7 +50,6 @@ const AccessPage: React.FC = () => {
       .then(res=>{
         onLoadList();
       })
-    console.log('json', json)
   }
 
   return (
@@ -61,27 +63,30 @@ const AccessPage: React.FC = () => {
         <div style={{width: '700px'}}>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             {
-              listInfo.map((item:any)=>{
+              list.current.map((item:any)=>{
                 return (
                   <div key={item.productPrice}>
                     <p style={{marginBottom: 0}}>{item.productName}</p>
                     <Flex justify={'flex-start'} align={'center'}>
                       设置{item.productName}价格：
                       &nbsp;&nbsp;&nbsp;
-                      <Input
+                      <InputNumber
+                        min={0}
                         prefix="￥"
                         suffix="元"
                         style={{width: '400px'}}
                         value={item?.productPrice}
                         onChange={(e:any)=>{
-                          let data = [...listInfo];
+                          let data = [...list.current];
                           data = data.map((json:any)=>{
                             if (json.productId == item.productId) {
-                              json.productPrice = e.target.value;
+                              json.productPrice = e;
                             }
                             return json;
                           });
-                          setListInfo(data);
+                          list.current = data;
+                          console.log('data', data)
+                          // setListInfo(data);
                         }}
                       />
                       &nbsp;&nbsp;&nbsp;
@@ -91,9 +96,6 @@ const AccessPage: React.FC = () => {
                 )
               })
             }
-            {/* <Flex justify={'center'} align={'center'}>
-              <Button type='primary'>确认价格</Button>
-            </Flex> */}
           </Space>
         </div>
       </Card>

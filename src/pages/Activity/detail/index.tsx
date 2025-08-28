@@ -14,16 +14,14 @@ import {
   Select,
   Flex,
   Tag,
-  Upload,
-  InputNumber
+  Upload
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  queryArticlesTags,
-  updateArticles,
-  addArticles,
+  updateActivity,
+  addActivity,
   queryArticlesById,
   postUpload
 } from '@/services/api';
@@ -33,8 +31,6 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 const { TextArea } = Input;
 
 const ArticleDetail: React.FC = () => {
-  const [tags, setTags] = useState([]);
-  const [tagInfo, setTagInfo] = useState<any>({});
   const [id, setId] = useState<any>('');
   const [type, setType] = useState<any>('');
   const [title, setTitle] = useState('');
@@ -85,22 +81,16 @@ const ArticleDetail: React.FC = () => {
 
   useEffect(()=>{
     let type = searchParams.get('type');
-    let category = searchParams.get('category');
     if (type == 'add') {
-      setTitle('新增文章');
+      setTitle('新增活动');
     }
     else if (type == 'edit') {
-      setTitle('编辑文章');
+      setTitle('编辑活动');
     }
     else if (type == 'detail') {
-      setTitle('文章详情');
+      setTitle('活动详情');
     }
     setType(type);
-    if (category) {
-      let data:any = {...article};
-      data.category = category;
-      setArticle(data);
-    }
     if (searchParams.get('id')) {
       let val = searchParams.get('id');
       setId(val);
@@ -112,21 +102,6 @@ const ArticleDetail: React.FC = () => {
       onDetail(id);
     }
   }, [id]);
-
-  useEffect(()=>{
-    onLoadTag(); 
-  }, []);
-
-  useEffect(()=>{
-    if (tags) {
-      let info:any = {};
-      tags.forEach((item:any)=>{
-        info[item.id] = item.name;
-      });
-      setTagInfo(info);
-      setTagInfo(info);
-    }
-  }, [tags]);
 
   const handleChange = (file:any) => {
     let params = new FormData();
@@ -148,14 +123,6 @@ const ArticleDetail: React.FC = () => {
     </button>
   );
 
-  const onLoadTag = () => {
-    queryArticlesTags()
-      .then(res=>{
-        let key = searchParams.get('key');
-        setTags(res.data.filter((item:any)=>item.category === key));
-      });
-  }
-
   const onSubmit = () => {
     let params = form.getFieldsValue();
     if (imageUrl) {
@@ -164,17 +131,19 @@ const ArticleDetail: React.FC = () => {
       params.coverImage = '';
     }
     params.content = article.content;
-    params.category = searchParams.get('category') || '';
+    params.category = '';
+    params.tagIds = [];
     if (id) {
       params.id = id;
-      updateArticles(params)
+      params.readCount = article.readCount
+      updateActivity(params)
         .then(res=>{
           message.success('编辑成功');
           history.back();
         })
     } else {
       params.publishTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      addArticles(params)
+      addActivity(params)
         .then(res=>{
           message.success('新增成功');
           history.back();
@@ -186,13 +155,13 @@ const ArticleDetail: React.FC = () => {
     queryArticlesById(id)
       .then(res=>{
         let json = {...res.data};
-        if (json.tags) {
-          let ids:any = [];
-          json.tags.forEach((item:any)=>{
-            ids.push(item.id);
-          })
-          json.tagIds = ids;
-        }
+        // if (json.tags) {
+        //   let ids:any = [];
+        //   json.tags.forEach((item:any)=>{
+        //     ids.push(item.id);
+        //   })
+        //   json.tagIds = ids;
+        // }
         if (json.coverImage) {
           setImageUrl(json.coverImage);
         }
@@ -250,29 +219,6 @@ const ArticleDetail: React.FC = () => {
                   />
               </Form.Item>
               <Form.Item
-                  label='阅读量'
-                  name='readCount'
-              >
-                  <InputNumber 
-                    value={article.readCount}
-                    placeholder='请输入阅读量'
-                    disabled={type === 'detail'}
-                    style={{
-                      width: '100%'
-                    }}
-                  />
-              </Form.Item>
-              <Form.Item
-                  label='作者'
-                  name='author'
-              >
-                  <Input 
-                    value={article.author}
-                    placeholder='请输入作者'
-                    disabled={type === 'detail'}
-                  />
-              </Form.Item>
-              <Form.Item
                 label="图片"
                 name="coverImage"
               >
@@ -310,27 +256,6 @@ const ArticleDetail: React.FC = () => {
                   />
                 </div>
               </Form.Item>
-              <Form.Item
-                label='标签'
-                name='tagIds'
-              >
-                  <Select
-                    mode='multiple'
-                    value={article.tagIds}
-                    disabled={type === 'detail'}
-                  >
-                    {
-                      tags.map((item:any)=>
-                      <Select.Option
-                        key={item.id}
-                        value={item.id}
-                      >
-                        {item.name}
-                      </Select.Option>
-                      )
-                    }
-                  </Select>
-              </Form.Item>
               {
                 type != 'detail' &&
                 <Form.Item>
@@ -357,16 +282,6 @@ const ArticleDetail: React.FC = () => {
                   />
                 ) : null
               }
-              <Flex>
-                标签:&nbsp;&nbsp;
-                {
-                  article.tagIds.map((item:any)=>
-                    <Tag key={item}>
-                      {tagInfo[item]}
-                    </Tag> 
-                  )
-                }
-              </Flex>
               <div dangerouslySetInnerHTML={{__html: article.content}}></div>
             </div>
           </Col>

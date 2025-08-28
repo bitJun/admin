@@ -1,0 +1,40 @@
+.tag {
+    height: 22px;
+    color: rgba(52, 56, 62, 1);
+    font-size: 16px;
+    padding: 0 24px;
+    line-height: 22px;
+    cursor: pointer;
+}
+.tag.active {
+    color: rgba(64, 129, 255, 1);
+    position: relative;
+}
+.tag.active::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 2px;
+    background: rgba(64, 129, 255, 1);
+}
+.img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+}
+.flexBox {
+    display: flex;
+    margin-bottom: 12px;
+}
+.content {
+    padding-left: 12px;
+    box-sizing: border-box;
+    flex: 1;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

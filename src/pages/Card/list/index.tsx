@@ -68,13 +68,13 @@ const MemberList = () => {
       keyword: keyword,
       startCreateTime: `${info.range[0]} 00:00:00`,
       endCreateTime: `${info.range[1]} 23:59:59`,
-      startActiveTime: `${info.range1[0]} 00:00:00`,
-      endActiveTime: `${info.range1[1]} 23:59:59`,
+      startActiveTime: info.state == 1 ? `${info.range1[0]} 00:00:00` : '',
+      endActiveTime: info.state == 1 ? `${info.range1[1]} 23:59:59` : '',
       state: info.state,
       page_id: pageIndex.current,
       page_size: pageSize.current,
-      rangeStart: Number(info.rangeStart) || 0,
-      rangeEnd: Number(info.rangeEnd) || 1000,
+      rangeStart: Number(info.rangeStart) || '',
+      rangeEnd: Number(info.rangeEnd) || '',
     }
     queryCardList(params)
       .then(res=>{
@@ -116,7 +116,7 @@ const MemberList = () => {
     <PageContainer
       ghost
       header={{
-        title: '发行记录',
+        title: '卡列表',
       }}
     >
       <Card>
@@ -142,6 +142,7 @@ const MemberList = () => {
               value={info.state}
               onChange={(value:any)=>{setInfo({...info, state: value})}}
             >
+              <Select.Option value={''}>全部</Select.Option>
               <Select.Option value={1}>已激活</Select.Option>
               <Select.Option value={0}>未激活</Select.Option>
             </Select>
@@ -177,18 +178,24 @@ const MemberList = () => {
                 })
               }}
             />
-            激活时间:
-            <RangePicker
-              format="YYYY-MM-DD"
-              value={[dayjs(info.range1[0]), dayjs(info.range1[1])]}
-              // defaultValue={range}
-              onChange={(value:any)=>{
-                setInfo({
-                  ...info,
-                  range1: [value[0].format('YYYY-MM-DD'), value[1].format('YYYY-MM-DD')],
-                })
-              }}
-            />
+            {
+              info.state == 1 &&
+              <span>激活时间:</span>
+            }
+            {
+              info.state == 1 &&
+              <RangePicker
+                format="YYYY-MM-DD"
+                value={[dayjs(info.range1[0]), dayjs(info.range1[1])]}
+                // defaultValue={range}
+                onChange={(value:any)=>{
+                  setInfo({
+                    ...info,
+                    range1: [value[0].format('YYYY-MM-DD'), value[1].format('YYYY-MM-DD')],
+                  })
+                }}
+              />
+            }
           </Flex>
           <Table<any>
             columns={columns}

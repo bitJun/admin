@@ -23,7 +23,7 @@ type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'
 
 
 const columns: TableColumnsType<any> = [
-  { title: '卡类别', dataIndex: 'id' },
+  { title: '序号', dataIndex: 'id' },
   { title: '卡号区间', dataIndex: 'range', render: (text, record, index) => `${record.rangeStart} - ${record.rangeEnd}`},
   { title: '发行张数', dataIndex: 'createNum' },
   // { title: '发行费用', dataIndex: 'register_time' },
