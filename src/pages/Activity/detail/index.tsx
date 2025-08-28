@@ -29,6 +29,7 @@ import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import ReactMarkdown from 'react-markdown';
+import './index.scss';
 
 const { TextArea } = Input;
 
@@ -162,8 +163,8 @@ const ArticleDetail: React.FC = () => {
         if (json.coverImage) {
           setImageUrl(json.coverImage);
         }
-        setMarkdown(res.content);
-        setPublishTime(res.publishTime);
+        setMarkdown(json.content);
+        setPublishTime(json.publishTime);
         setArticle(json);
         setTitle('文章详情');
         form.setFieldsValue(json);
@@ -318,7 +319,9 @@ const ArticleDetail: React.FC = () => {
                 ) : null
               }
               {/* <div dangerouslySetInnerHTML={{__html: article.content}}></div> */}
-              <ReactMarkdown>{markdown}</ReactMarkdown>
+              <div className='content'>
+                <ReactMarkdown>{markdown}</ReactMarkdown>
+              </div>
             </div>
           </Col>
         </Row>
