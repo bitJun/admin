@@ -10,7 +10,7 @@ export interface ChartData {
 
 export interface OperationChartProps {
   /** 图表类型 */
-  type: 'line' | 'bar' | 'pie' | 'area';
+  type: 'line' | 'lines' | 'bar' | 'pie' | 'area';
   /** 图表数据 */
   data: ChartData[];
   /** 图表标题 */
@@ -61,12 +61,17 @@ const OperationChart: React.FC<OperationChartProps> = ({
         subtext: subtitle,
         left: 'center',
       },
-      tooltip: showTooltip ? {
-        trigger: type === 'pie' ? 'item' : 'axis',
-        formatter: type === 'pie' 
-          ? '{a} <br/>{b}: {c} ({d}%)'
-          : '{b}: {c}',
-      } : undefined,
+      tooltip: {
+        trigger: 'axis',
+        formatter: function(params:any) {
+          const index = params[0].dataIndex; // 获取当前数据项的索引
+          const itemData = data[index];
+          var date = itemData.name; // 日期
+          var seriesData = `访问量:${itemData.currentValue}人`
+          var yearOnYear = `同比去年:${itemData.compareValue}人, 增长率 ${itemData.growthRate || 0}%`
+          return date + '<br>' + seriesData + '<br>' + yearOnYear;
+        }
+      },
       legend: showLegend ? {
         orient: type === 'pie' ? 'vertical' : 'horizontal',
         left: type === 'pie' ? 'left' : 'center',
@@ -88,11 +93,47 @@ const OperationChart: React.FC<OperationChartProps> = ({
     const baseOption = getBaseOption();
     const names = data.map(item => item.name);
     const values = data.map(item => item.value);
-
     switch (type) {
       case 'line':
         return {
           ...baseOption,
+          xAxis: {
+            type: 'category',
+            data: names,
+            name: xAxisLabel,
+          },
+          yAxis: {
+            type: 'value',
+            name: yAxisLabel,
+          },
+          series: [{
+            type: 'line',
+            data: values,
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 6,
+            lineStyle: {
+              width: 2,
+            },
+          }],
+        };
+
+      case 'lines':
+        return {
+          ...baseOption,
+          tooltip: {
+            trigger: 'axis',
+            formatter: function(params:any) {
+                const index = params[0].dataIndex;
+                const itemData = data[index];
+                var date = itemData.name; // 日期
+                var seriesData = `收入总计:${itemData.value}`;
+                var yearOnYear = `同比去年:${itemData.compareValue}, 增长率${itemData.growthRate || 0}%`
+                var normalVip = `普通VIP:${itemData.normalVipIncome}, 占比 ${itemData.normalVipIncomePercent || 0}%`
+                var superVip = `超级VIP:${itemData.superVipIncome}人, 占比 ${itemData.superVipIncomePercent || 0}%`
+                return date + '<br>' + seriesData + '<br>' + yearOnYear + '<br>' + normalVip + '<br>' + superVip;
+            }
+          },
           xAxis: {
             type: 'category',
             data: names,
@@ -128,7 +169,7 @@ const OperationChart: React.FC<OperationChartProps> = ({
           },
           series: [{
             type: 'line',
-            data: values,
+            data: names,
             smooth: true,
             areaStyle: {
               opacity: 0.3,

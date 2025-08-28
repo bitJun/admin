@@ -116,7 +116,8 @@ const HomePage: React.FC = () => {
         if (res) {
           res = res.map((item:any)=>{
             item.name = item.date;
-            item.value = item.compareValue;
+            item.value = item.currentValue;
+            item.compareValue = item.compareValue;
             return item;
           })
           setOperationsList(res);
@@ -130,7 +131,8 @@ const HomePage: React.FC = () => {
         if (res) {
           res = res.map((item:any)=>{
             item.name = item.date;
-            item.value = item.compareValue;
+            item.value = item.currentValue;
+            item.compareValue = item.compareValue;
             return item;
           })
           setOperationsList(res);
@@ -158,7 +160,8 @@ const HomePage: React.FC = () => {
         if(res) {
           res = res.map((item:any)=>{
             item.name = item.date;
-            item.value = item.compareValue;
+            item.value = item.currentValue;
+            item.compareValue = item.compareValue;
             return item;
           })
           setRigisterList(res);
@@ -172,7 +175,8 @@ const HomePage: React.FC = () => {
         if(res) {
           res = res.map((item:any)=>{
             item.name = item.date;
-            item.value = item.compareValue;
+            item.value = item.currentValue;
+            item.compareValue = item.compareValue;
             return item;
           })
           setVipsList(res);
@@ -186,7 +190,8 @@ const HomePage: React.FC = () => {
         if(res) {
           res = res.map((item:any)=>{
             item.name = item.date;
-            item.value = item.compareValue;
+            item.value = item.currentValue;
+            item.compareValue = item.compareValue;
             return item;
           })
           setVipsList(res);
@@ -198,10 +203,9 @@ const HomePage: React.FC = () => {
     queryOperationsMonthIncome()
       .then((res) => {
         if (res) {
-          console.log('res', res);
           res = res.map((item:any)=>{
             item.name = item.date;
-            item.value = item.compareValue;
+            item.value = item.totalIncome;
             return item;
           })
           setIncomeList(res);
@@ -213,6 +217,11 @@ const HomePage: React.FC = () => {
     queryOperationsYearIncome()
       .then((res) => {
         if (res) {
+          res = res.map((item:any)=>{
+            item.name = item.date;
+            item.value = item.totalIncome;
+            return item;
+          })
           setIncomeList(res);
         }
       });
@@ -425,7 +434,7 @@ const HomePage: React.FC = () => {
             </Flex>
           </Flex>
           <OperationChart
-            type="line"
+            type="lines"
             data={incomeList}
             title=""
             subtitle=""
