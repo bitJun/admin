@@ -202,8 +202,15 @@ const ArticleDetail: React.FC = () => {
         if (json.coverImage) {
           setImageUrl(json.coverImage);
         }
-        setMarkdown(json.content);
-        setPublishTime(json.publishTime);
+        console.log('json', json);
+        if (json.content) {
+          setMarkdown(json.content);
+        }
+        // setMarkdown(json.content);
+        if (json.publishTime) {
+          setPublishTime(json.publishTime);
+        }
+        // setPublishTime(json.publishTime);
         setArticle(json);
         setTitle('文章详情');
         form.setFieldsValue(json);
